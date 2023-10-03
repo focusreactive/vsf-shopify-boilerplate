@@ -1,8 +1,28 @@
+import React from 'react';
 import { SfScrollable } from '@storefront-ui/react';
 import { ProductCard } from '~/components';
 import type { ProductSliderProps } from '~/components';
+import { sdk } from '~/sdk';
 
-export function ProductSlider({ products, className, ...attributes }: ProductSliderProps) {
+const useProducts = () => {
+  const [products, setProducts] = React.useState(null);
+
+  const getData = async () => {
+    const data = await sdk.shopify.getProducts();
+    setProducts(data);
+  };
+
+  React.useEffect(() => {
+    getData();
+  }, []);
+
+  return { products };
+};
+
+export function ProductSlider({ className, ...attributes }: ProductSliderProps) {
+  const { products } = useProducts();
+
+  return JSON.stringify(products);
   return (
     <SfScrollable
       buttonsPlacement="floating"
