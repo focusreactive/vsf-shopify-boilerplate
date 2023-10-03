@@ -11,6 +11,7 @@ export function ProductCard({
   imageUrl,
   imageAlt,
   price,
+  currencyCode,
   rating,
   ratingCount,
   slug,
@@ -19,7 +20,9 @@ export function ProductCard({
   ...attributes
 }: ProductCardProps) {
   const { t } = useTranslation();
-
+  const priceString = price
+    ? new Intl.NumberFormat('en-EN', { style: 'currency', currency: currencyCode }).format(price)
+    : '';
   return (
     <div
       className={classNames('border border-neutral-200 rounded-md hover:shadow-lg flex-auto flex-shrink-0', className)}
@@ -43,16 +46,18 @@ export function ProductCard({
         <SfLink href={`/product/${slug}`} as={Link} variant="secondary" className="no-underline">
           {name}
         </SfLink>
-        <div className="flex items-center pt-1">
-          <SfRating size="xs" value={rating} max={5} />
+        {rating && ratingCount ? (
+          <div className="flex items-center pt-1">
+            <SfRating size="xs" value={rating} max={5} />
 
-          <SfLink href="#" variant="secondary" as={Link} className="ml-1 no-underline">
-            <SfCounter size="xs">{ratingCount}</SfCounter>
-          </SfLink>
-        </div>
+            <SfLink href="#" variant="secondary" as={Link} className="ml-1 no-underline">
+              <SfCounter size="xs">{ratingCount}</SfCounter>
+            </SfLink>
+          </div>
+        ) : null}
         <p className="block py-2 font-normal typography-text-xs text-neutral-700 text-justify">{description}</p>
         <span className="block pb-2 font-bold typography-text-sm" data-testid="product-card-vertical-price">
-          ${price}
+          {priceString}
         </span>
         <SfButton type="button" size="sm" slotPrefix={<SfIconShoppingCart size="sm" />}>
           {t('addToCartShort')}

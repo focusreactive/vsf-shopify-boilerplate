@@ -3,7 +3,7 @@ import { type SdkModule, sdkModule } from '@vue-storefront/storefront-boilerplat
 // TODO [+@vue-storefront/shopify-sdk>=1]: outside of integration boilerplate it should be imported from NPM
 import { shopifyModule, ShopifyModuleType } from '../../../../packages/sdk/src';
 // import { type ShopifyModuleType, shopifyModule } from '@vue-storefront/shopify-sdk';
-import { fragments } from './fragments';
+import { fragments } from './shopify/fragments';
 
 const sdkConfig = {
   commerce: buildModule<SdkModule>(sdkModule),

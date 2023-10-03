@@ -10,6 +10,24 @@ const product = `#graphql
   id
   title
   description
+  handle
+  primaryImage: featuredImage {
+    id
+    url
+    width
+    height
+    altText
+  }
+  priceRange {
+    minVariantPrice {
+      amount
+      currencyCode
+    }
+    maxVariantPrice {
+      amount
+      currencyCode
+    }
+  }
   availableForSale
   variants(first: 10) {
     edges {

@@ -4,12 +4,27 @@ import { ProductCard } from '~/components';
 import type { ProductSliderProps } from '~/components';
 import { sdk } from '~/sdk';
 
+const processProducts = (resp) => {
+  try {
+    const productsResponse = resp.data.products.edges;
+    return productsResponse.map(({ node }) => ({
+      ...node,
+      price: node.priceRange?.minVariantPrice?.amount,
+      currencyCode: node.priceRange?.minVariantPrice?.currencyCode,
+      slug: node.handle,
+    }));
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 const useProducts = () => {
-  const [products, setProducts] = React.useState(null);
+  const [products, setProducts] = React.useState([]);
 
   const getData = async () => {
-    const data = await sdk.shopify.getProducts();
-    setProducts(data);
+    const resp = await sdk.shopify.getProducts();
+    setProducts(processProducts(resp));
   };
 
   React.useEffect(() => {
@@ -22,7 +37,7 @@ const useProducts = () => {
 export function ProductSlider({ className, ...attributes }: ProductSliderProps) {
   const { products } = useProducts();
 
-  return JSON.stringify(products);
+  // return products.map((d) => <p>{JSON.stringify(d)}</p>);
   return (
     <SfScrollable
       buttonsPlacement="floating"
@@ -30,17 +45,18 @@ export function ProductSlider({ className, ...attributes }: ProductSliderProps) 
       {...attributes}
       wrapperClassName={className}
     >
-      {products.map(({ id, name, description, rating, price, primaryImage, slug }) => (
+      {products.map(({ id, title, description, rating, price, currencyCode, primaryImage, slug }) => (
         <ProductCard
           key={id}
           className="max-w-[192px]"
-          name={name}
+          name={title}
           description={description}
           ratingCount={rating?.count}
           rating={rating?.average}
-          price={price?.value.amount}
+          price={price}
+          currencyCode={currencyCode}
           imageUrl={primaryImage?.url}
-          imageAlt={primaryImage?.alt}
+          imageAlt={primaryImage?.altText}
           slug={slug}
         />
       ))}

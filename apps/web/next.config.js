@@ -24,6 +24,14 @@ const nextConfig = {
   images: {
     imageSizes: [64, 96, 128, 160, 256, 384],
     deviceSizes: [360, 640, 750],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.shopify.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
   transpilePackages: ['@storefront-ui/react'],
   i18n,
