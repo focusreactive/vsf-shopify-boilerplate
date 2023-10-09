@@ -16,10 +16,12 @@ export function ProductCard({
   ratingCount,
   slug,
   className,
+  descriptionClassName,
   priority,
   ...attributes
 }: ProductCardProps) {
   const { t } = useTranslation();
+  // TODO [>0.2] Care about getting right locale for price formatting
   const priceString = price
     ? new Intl.NumberFormat('en-EN', { style: 'currency', currency: currencyCode }).format(price)
     : '';
@@ -42,7 +44,12 @@ export function ProductCard({
           />
         </SfLink>
       </div>
-      <div className="p-2 border-t border-neutral-200 typography-text-sm">
+      <div
+        className={classNames(
+          'p-2 border-t border-neutral-200 typography-text-sm flex flex-col justify-between items-start',
+          descriptionClassName,
+        )}
+      >
         <SfLink href={`/product/${slug}`} as={Link} variant="secondary" className="no-underline">
           {name}
         </SfLink>
@@ -55,7 +62,9 @@ export function ProductCard({
             </SfLink>
           </div>
         ) : null}
-        <p className="block py-2 font-normal typography-text-xs text-neutral-700 text-justify">{description}</p>
+        <p className="block py-2 font-normal typography-text-xs text-neutral-700 text-justify flex-grow">
+          {description}
+        </p>
         <span className="block pb-2 font-bold typography-text-sm" data-testid="product-card-vertical-price">
           {priceString}
         </span>

@@ -48,7 +48,8 @@ export function ProductSlider({ className, ...attributes }: ProductSliderProps) 
       {products.map(({ id, title, description, rating, price, currencyCode, primaryImage, slug }) => (
         <ProductCard
           key={id}
-          className="max-w-[192px]"
+          className="w-[192px]"
+          descriptionClassName="h-[192px]"
           name={title}
           description={description}
           ratingCount={rating?.count}
