@@ -7,6 +7,7 @@ import { get, map, defaults as withDefaults, zipObject, groupBy, uniqBy, pick, m
  * @param {SfProduct} product Product object
  */
 export function useProductAttribute<TAttribute extends string>(product: SfProduct, attributesNames: TAttribute[] = []) {
+  console.log('🚀 ~ file: useProductAttribute.ts:10 ~ product:', product?.variants || []);
   const attributes = groupBy(
     uniqBy(
       (product?.variants || []).flatMap((variant) => variant?.attributes),

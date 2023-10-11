@@ -3,7 +3,8 @@ import { SfProduct } from '@vue-storefront/unified-data-model';
 import { sdk } from '~/sdk';
 
 const fetchProduct = async (slug: string): Promise<SfProduct> => {
-  return sdk.commerce.getProduct({ slug });
+  const data = await sdk.shopify.getProduct({ handle: slug });
+  return data;
 };
 
 export async function prefetchProduct(slug: string): Promise<QueryClient> {

@@ -13,7 +13,7 @@ import {
   PurchaseCard,
   RecommendedProducts,
 } from '~/components';
-import { useProductRecommended, useProduct, prefetchProduct, useProductBreadcrumbs } from '~/hooks';
+import { useProduct, useProductRecommended, prefetchProduct, useProductBreadcrumbs } from '~/hooks';
 import { DefaultLayout } from '~/layouts';
 
 interface ProductPageQuery extends ParsedUrlQuery {
@@ -53,8 +53,9 @@ export function ProductPage() {
   const { slug } = router.query as ProductPageQuery;
 
   const { data: product } = useProduct(slug);
+  console.log("🚀 ~ file: [slug].tsx:56 ~ ProductPage ~ product:", product)
   const { data: recommendedProducts = [] } = useProductRecommended(slug);
-  const { breadcrumbs } = useProductBreadcrumbs(product);
+  // const { breadcrumbs } = useProductBreadcrumbs(product);
 
   if (!product) {
     return null;
@@ -63,14 +64,14 @@ export function ProductPage() {
   const { gallery } = product;
 
   return (
-    <DefaultLayout breadcrumbs={breadcrumbs}>
+    <DefaultLayout /* breadcrumbs={breadcrumbs} */>
       <Head>
         <title>{`${product.name} | Vue Storefront Demo`}</title>
       </Head>
       <NarrowContainer>
         <div className="md:grid gap-x-6 grid-areas-product-page grid-cols-product-page">
           <section className="grid-in-left-top md:h-full xl:max-h-[700px]">
-            <Gallery images={gallery} />
+            {/* <Gallery images={gallery} /> */}
           </section>
           <section className="mb-10 grid-in-right md:mb-0">
             <PurchaseCard product={product} />

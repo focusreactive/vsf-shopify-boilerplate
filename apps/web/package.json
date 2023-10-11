@@ -4,7 +4,7 @@
   "private": true,
   "main": "",
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--inspect' && next dev",
     "build": "next build",
     "build:analyze": "cross-env ANALYZE=true yarn build",
     "start": "next start",
