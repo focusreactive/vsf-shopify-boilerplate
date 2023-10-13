@@ -1,7 +1,18 @@
 const variant = `#graphql
 {
   id
+  sku
   title
+  currentlyNotInStock
+  selectedOptions {
+    name
+    value
+  }
+  quantityAvailable
+  price {
+    amount
+    currencyCode
+  }
 }
 `;
 
@@ -39,6 +50,11 @@ const product = `#graphql
   }
   availableForSale
   totalInventory
+  options {
+    id
+    name
+    values
+  }
   variants(first: 10) {
     edges {
       node {
