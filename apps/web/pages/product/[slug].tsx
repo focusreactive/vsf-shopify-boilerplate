@@ -53,7 +53,6 @@ export function ProductPage() {
   const { slug } = router.query as ProductPageQuery;
 
   const { data: product } = useProduct(slug);
-  console.log("🚀 ~ file: [slug].tsx:56 ~ ProductPage ~ product:", product)
   const { data: recommendedProducts = [] } = useProductRecommended(slug);
   // const { breadcrumbs } = useProductBreadcrumbs(product);
 
@@ -71,7 +70,7 @@ export function ProductPage() {
       <NarrowContainer>
         <div className="md:grid gap-x-6 grid-areas-product-page grid-cols-product-page">
           <section className="grid-in-left-top md:h-full xl:max-h-[700px]">
-            {/* <Gallery images={gallery} /> */}
+            <Gallery images={gallery} />
           </section>
           <section className="mb-10 grid-in-right md:mb-0">
             <PurchaseCard product={product} />

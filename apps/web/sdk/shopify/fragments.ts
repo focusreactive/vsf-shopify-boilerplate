@@ -10,13 +10,22 @@ const product = `#graphql
   id
   title
   description
-  handle
+  slug: handle
   primaryImage: featuredImage {
     id
     url
     width
     height
     altText
+  }
+  gallery: images(first: 10) {
+    edges {
+      node {
+        id
+        alt: altText
+        url
+      }
+    }
   }
   priceRange {
     minVariantPrice {
@@ -29,6 +38,7 @@ const product = `#graphql
     }
   }
   availableForSale
+  totalInventory
   variants(first: 10) {
     edges {
       node {
