@@ -22,8 +22,9 @@ const useProducts = () => {
   const [products, setProducts] = React.useState([]);
 
   const getData = async () => {
-    const resp = await sdk.shopify.getProducts();
-    setProducts(processProducts(resp));
+    const resp = await sdk.shopify.getProducts({});
+    console.log('🚀 ~ file: ProductSlider.tsx:26 ~ getData ~ resp:', resp);
+    setProducts(resp.products);
   };
 
   React.useEffect(() => {
