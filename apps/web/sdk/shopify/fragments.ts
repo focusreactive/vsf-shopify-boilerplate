@@ -38,6 +38,11 @@ const product = `#graphql
       }
     }
   }
+  options {
+    id
+    name
+    values
+  }
   priceRange {
     minVariantPrice {
       amount

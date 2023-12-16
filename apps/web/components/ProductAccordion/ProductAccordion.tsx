@@ -20,49 +20,55 @@ export function ProductAccordion({ product, ...attributes }: ProductAccordionPro
 
   return (
     <div {...attributes}>
-      <SfAccordionItem
-        summary={
-          <>
-            <h2 className="font-bold font-headings text-lg leading-6 md:text-2xl">{t('productDetails')}</h2>
-            <SfIconExpandMore
-              className={classNames('text-neutral-500', {
-                'rotate-180': isOpen('description'),
-              })}
-            />
-          </>
-        }
-        summaryClassName="md:rounded-md w-full hover:bg-neutral-100 py-2 pl-4 pr-3 flex justify-between items-center"
-        open={isOpen('description')}
-        onToggle={handleToggle('description')}
-      >
-        <div className="py-2">
-          <p className="text-neutral-900 px-4">{description}</p>
-        </div>
-      </SfAccordionItem>
-      <Divider className="my-4" />
-      <SfAccordionItem
-        summary={
-          <>
-            <h2 className="font-bold font-headings text-lg leading-6 md:text-2xl">{t('customerReviews')}</h2>
-            <SfIconExpandMore
-              className={classNames('text-neutral-500', {
-                'rotate-180': isOpen('reviews'),
-              })}
-            />
-          </>
-        }
-        summaryClassName="md:rounded-md w-full hover:bg-neutral-100 py-2 pl-4 pr-3 flex justify-between items-center"
-        open={isOpen('reviews')}
-        onToggle={handleToggle('reviews')}
-      >
-        <div className="py-2">
-          <div className="text-neutral-900 px-4">
-            {reviews.map((review) => (
-              <Review review={review} key={review.id} />
-            ))}
+      {description ? (
+        <>
+          <SfAccordionItem
+            summary={
+              <>
+                <h2 className="font-bold font-headings text-lg leading-6 md:text-2xl">{t('productDetails')}</h2>
+                <SfIconExpandMore
+                  className={classNames('text-neutral-500', {
+                    'rotate-180': isOpen('description'),
+                  })}
+                />
+              </>
+            }
+            summaryClassName="md:rounded-md w-full hover:bg-neutral-100 py-2 pl-4 pr-3 flex justify-between items-center"
+            open={isOpen('description')}
+            onToggle={handleToggle('description')}
+          >
+            <div className="py-2">
+              <p className="text-neutral-900 px-4">{description}</p>
+            </div>
+          </SfAccordionItem>
+          <Divider className="my-4" />
+        </>
+      ) : null}
+      {reviews.length > 0 ? (
+        <SfAccordionItem
+          summary={
+            <>
+              <h2 className="font-bold font-headings text-lg leading-6 md:text-2xl">{t('customerReviews')}</h2>
+              <SfIconExpandMore
+                className={classNames('text-neutral-500', {
+                  'rotate-180': isOpen('reviews'),
+                })}
+              />
+            </>
+          }
+          summaryClassName="md:rounded-md w-full hover:bg-neutral-100 py-2 pl-4 pr-3 flex justify-between items-center"
+          open={isOpen('reviews')}
+          onToggle={handleToggle('reviews')}
+        >
+          <div className="py-2">
+            <div className="text-neutral-900 px-4">
+              {reviews.map((review) => (
+                <Review review={review} key={review.id} />
+              ))}
+            </div>
           </div>
-        </div>
-      </SfAccordionItem>
+        </SfAccordionItem>
+      ) : null}
     </div>
   );
 }
