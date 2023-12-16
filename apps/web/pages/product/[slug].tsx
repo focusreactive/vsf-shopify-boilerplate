@@ -73,12 +73,13 @@ export function ProductPage() {
           <section className="grid-in-left-top md:h-full xl:max-h-[700px]">
             <Gallery images={images} />
           </section>
-          <section className="mb-10 grid-in-right md:mb-0">{/* <PurchaseCard product={product} /> */}</section>
+          <section className="mb-10 grid-in-right md:mb-0">
+            <PurchaseCard product={product} />
+          </section>
           <section className="grid-in-left-bottom md:mt-8">
-            <Divider className="mb-6" />
-            {/* <ProductProperties product={product} showColors={false} /> */}
-            <Divider className="mt-4 mb-2 md:mt-8" />
-            {/* <ProductAccordion product={product} /> */}
+            {/* <Divider className="mb-6" /> */}
+            <ProductProperties product={product} showColors={false} />
+            <ProductAccordion product={product} />
           </section>
           <Divider className="mt-4 mb-2" />
         </div>

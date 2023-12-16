@@ -1,45 +1,45 @@
 import { useState } from 'react';
-import { SfAttribute, SfProduct } from '@vue-storefront/unified-data-model';
-import { get, map, defaults as withDefaults, zipObject, groupBy, uniqBy, pick, mapValues } from 'lodash-es';
+import { Product } from '~/sdk/shopify/types';
 
-/**
- * Hook for getting product attributes data
- * @param {SfProduct} product Product object
- */
-export function useProductAttribute<TAttribute extends string>(product: SfProduct, attributesNames: TAttribute[] = []) {
-  // const attributes = groupBy(
-  //   uniqBy(
-  //     (product?.variants || []).flatMap((variant) => variant?.attributes),
-  //     'value',
-  //   ),
-  //   'name',
-  // );
-  // const mapAttribute = (attributes: SfAttribute[] = []) => {
-  //   const mappedAttributes = mapValues(
-  //     pick(groupBy(attributes, 'name'), attributesNames),
-  //     (attribute) => attribute[0].value,
-  //   );
-
-  //   const defaults = zipObject(
-  //     attributesNames,
-  //     map(attributesNames, () => null),
-  //   );
-  //   return withDefaults(mappedAttributes, defaults);
-  // };
-  const defaultAttributes = Object.entries(product.attributes)
-    .map(([name, values]) => ({ [name]: values[0].value }))
-    .reduce((obj, attr) => ({ ...obj, ...attr }), {});
-
-  const [selectedAttrs, setSelectedAttrs] = useState(defaultAttributes);
-
-  return {
-    getAttributeList: (attributeName: TAttribute) => get(product.attributes, attributeName, [] as SfAttribute[]),
-    getAttribute: (attributeName: TAttribute) => get(selectedAttrs, attributeName, null),
-    setAttribute: (attributeName: TAttribute, attributeValue: string) => {
-      setSelectedAttrs((previous) => ({
-        ...previous,
-        [attributeName]: attributeValue,
-      }));
-    },
-  };
+interface AttributeValue {
+  label: string;
+  value: string;
 }
+
+interface UseProductAttribute {
+  getAttributeList: (attributeName: string) => AttributeValue[];
+  getAttribute: (attributeName: string) => string;
+  setAttribute: (attributeName: string, value: string) => void;
+  getOptions: () => string[];
+}
+
+export const useProductAttribute = (product: Product, attributes: string[]): UseProductAttribute => {
+  const initialAttributes = attributes.reduce<Record<string, string>>((accumulator, attribute) => {
+    const option = product.options.find((opt) => opt.name === attribute);
+    if (option && option.values.length > 0) {
+      accumulator[attribute] = option.values[0];
+    }
+    return accumulator;
+  }, {});
+
+  const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>(initialAttributes);
+
+  const getAttributeList = (attributeName: string): AttributeValue[] => {
+    const attribute = product.options.find((option) => option.name === attributeName);
+    return attribute ? attribute.values.map((value) => ({ label: value, value })) : [];
+  };
+
+  const getAttribute = (attributeName: string): string => {
+    return selectedAttributes[attributeName] || '';
+  };
+
+  const setAttribute = (attributeName: string, value: string): void => {
+    setSelectedAttributes((previous) => ({ ...previous, [attributeName]: value }));
+  };
+
+  const getOptions = (): string[] => {
+    return product.options.map((option) => option.name);
+  };
+
+  return { getAttributeList, getAttribute, setAttribute, getOptions };
+};
