@@ -41,6 +41,10 @@ export function Gallery({ images, className, ...attributes }: GalleryProps) {
     return null;
   };
 
+  if (!images.map) {
+    return null;
+  }
+
   const onChangeIndex = (index: number) => {
     cancel();
     setActiveIndex(() => clamp(index, 0, images.length - 1));
