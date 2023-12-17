@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useCartContext } from '~/hooks/useCart';
-import { Product } from '~/sdk/shopify/types';
+import { Product, Variant, Option } from '~/sdk/shopify/types';
 
 interface AttributeValue {
   label: string;
@@ -17,37 +17,27 @@ interface UseProductAttribute {
 export const useProductAttribute = (product: Product): UseProductAttribute => {
   const { setSelectedVariant, selectedVariantId } = useCartContext();
 
-  useEffect(() => {
-    const selectedVariant = product.variants.find((variant) => variant.id === selectedVariantId);
-    if (selectedVariant) {
-      const updatedAttributes = selectedVariant.selectedOptions.reduce((accumulator, option) => {
-        accumulator[option.name] = option.value;
-        return accumulator;
-      }, {});
-      setSelectedVariant(updatedAttributes);
-    }
-  }, [selectedVariantId, product.variants, setSelectedVariant]);
+  const getSelectedVariant = useCallback((): Variant | undefined => {
+    return product.variants.find((variant: Variant) => variant.id === selectedVariantId);
+  }, [product.variants, selectedVariantId]);
 
   const getAttributeList = (attributeName: string): AttributeValue[] => {
-    const attribute = product.options.find((option) => option.name === attributeName);
+    const attribute = product.options.find((option: Option) => option.name === attributeName);
     return attribute ? attribute.values.map((value) => ({ label: value, value })) : [];
   };
 
   const getAttribute = (attributeName: string): string => {
-    const selectedVariant = product.variants.find((variant) => variant.id === selectedVariantId);
+    const selectedVariant = getSelectedVariant();
     const selectedOption = selectedVariant?.selectedOptions.find((option) => option.name === attributeName);
     return selectedOption?.value || '';
   };
 
   const setAttribute = (attributeName: string, value: string): void => {
-    // Merging the new selection with the existing options
     const selectedOptions = {
-      ...product.variants
-        .find((variant) => variant.id === selectedVariantId)
-        ?.selectedOptions.reduce((accumulator, option) => {
-          accumulator[option.name] = option.value;
-          return accumulator;
-        }, {}),
+      ...getSelectedVariant()?.selectedOptions.reduce((accumulator: { [key: string]: string }, option) => {
+        accumulator[option.name] = option.value;
+        return accumulator;
+      }, {}),
       [attributeName]: value,
     };
 
@@ -55,8 +45,22 @@ export const useProductAttribute = (product: Product): UseProductAttribute => {
   };
 
   const getOptions = (): string[] => {
-    return product.options.map((option) => option.name);
+    return product.options.map((option: Option) => option.name);
   };
+
+  useEffect(() => {
+    const selectedVariant = getSelectedVariant();
+    if (selectedVariant) {
+      const updatedAttributes = selectedVariant.selectedOptions.reduce(
+        (accumulator: { [key: string]: string }, option) => {
+          accumulator[option.name] = option.value;
+          return accumulator;
+        },
+        {},
+      );
+      setSelectedVariant(updatedAttributes);
+    }
+  }, [selectedVariantId, product.variants, setSelectedVariant, getSelectedVariant]);
 
   return { getAttributeList, getAttribute, setAttribute, getOptions };
 };

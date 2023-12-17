@@ -20,6 +20,12 @@ export type Variant = {
   };
 };
 
+export type Option = {
+  id: string;
+  name: string;
+  values: string[];
+};
+
 export type Product = {
   id: string;
   title: string;
@@ -49,10 +55,6 @@ export type Product = {
   };
   availableForSale: boolean;
   totalInventory: number;
-  options: {
-    id: string;
-    name: string;
-    values: string[];
-  }[];
+  options: Option[];
   variants: Variant[];
 };
