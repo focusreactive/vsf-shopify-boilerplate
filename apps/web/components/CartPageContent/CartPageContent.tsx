@@ -8,24 +8,36 @@ import emptyCartImage from '~/public/images/empty-cart.svg';
 
 export function CartPageContent() {
   const { t } = useTranslation('cart');
-  const { data: cart } = useCart();
+  const { cart, changeCartItemQuantity, isLoading } = useCart();
 
-  return cart?.lineItems.length ? (
+  const handleChangeQuantity = (lineId: string, currentQuantity: number) => (quantity: number) => {
+    if (isLoading) {
+      return;
+    }
+    if (currentQuantity === quantity) {
+      return;
+    }
+    changeCartItemQuantity(lineId, quantity);
+  };
+
+  return cart?.lines.length ? (
     <div className="md:grid md:grid-cols-12 md:gap-x-6" data-testid="cart-page-content">
       <div className="col-span-7 mb-10 md:mb-0">
-        {cart.lineItems.map((item) => (
+        {cart.lines.map(({ id, merchandise, quantity }) => (
           <CartProductCard
-            key={item.id}
-            attributes={item.attributes}
-            imageUrl={item.image?.url}
-            imageAlt={item.image?.alt}
-            name={item.name}
-            price={item.totalPrice?.amount || 0}
-            specialPrice={item.unitPrice?.value?.amount || 0}
+            key={id}
+            attributes={merchandise.selectedOptions}
+            imageUrl={merchandise.image?.url}
+            imageAlt={merchandise.image?.altText}
+            name={merchandise.product.title}
+            price={merchandise.price?.amount || 0}
+            specialPrice={merchandise.unitPrice?.amount || 0}
             maxValue={10}
             minValue={1}
-            value={item.quantity}
-            slug={item.slug}
+            value={quantity}
+            slug={merchandise.product.slug}
+            onChangeQuantity={handleChangeQuantity(id, quantity)}
+            isLoading={isLoading}
           />
         ))}
       </div>

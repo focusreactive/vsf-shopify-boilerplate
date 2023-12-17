@@ -17,9 +17,11 @@ import { clamp } from '@storefront-ui/shared';
 import { Trans, useTranslation } from 'next-i18next';
 import { QuantitySelector, Tag } from '~/components';
 import type { PurchaseCardProps } from '~/components';
+import { useCartContext } from '~/hooks';
 
 export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
   const { t } = useTranslation(['product', 'common']);
+  const { addSelectedVariantToCart } = useCartContext();
   const minProductQuantity = 1;
   const maxProductQuantity = 999;
   const [productQuantity, { set }] = useCounter(minProductQuantity);
@@ -27,6 +29,11 @@ export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
   function handleOnChange(nextValue: number) {
     set(clamp(nextValue, minProductQuantity, maxProductQuantity));
   }
+
+  function handleAddToCart() {
+    addSelectedVariantToCart(productQuantity);
+  }
+
   return (
     <div
       className="p-4 xl:p-6 md:border md:border-neutral-100 md:shadow-lg md:rounded-md md:sticky md:top-20"
@@ -78,6 +85,7 @@ export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
             size="lg"
             className="flex-grow-[2] flex-shrink basis-auto whitespace-nowrap"
             slotPrefix={<SfIconShoppingCart size="sm" />}
+            onClick={handleAddToCart}
           >
             {t('common:addToCart')}
           </SfButton>

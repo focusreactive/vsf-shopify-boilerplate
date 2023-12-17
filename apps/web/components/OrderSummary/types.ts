@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
-import { SfCart } from '@vue-storefront/unified-data-model';
+import { CartDetails } from '~/sdk/shopify/types';
 
 export type OrderSummaryPropsType = PropsWithChildren & {
   className?: string;
-  cart: SfCart;
+  cart: CartDetails;
 };

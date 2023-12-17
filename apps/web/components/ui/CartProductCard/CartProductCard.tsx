@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { SfLink, SfIconSell } from '@storefront-ui/react';
+import { SfLink, SfIconSell, SfLoaderCircular } from '@storefront-ui/react';
 import { useTranslation } from 'next-i18next';
 import { QuantitySelector } from '~/components';
 import type { CartProductCardProps } from '~/components';
@@ -16,8 +16,14 @@ export function CartProductCard({
   specialPrice,
   value,
   slug,
+  onChangeQuantity,
+  isLoading,
 }: CartProductCardProps) {
   const { t } = useTranslation('product');
+
+  const onChange = (q: number) => {
+    onChangeQuantity(q);
+  };
 
   return (
     <div
@@ -36,10 +42,12 @@ export function CartProductCard({
             />
           </SfLink>
         )}
-        <div className="absolute top-0 left-0 text-white bg-secondary-600 py-1 pl-1.5 pr-2 text-xs font-medium">
-          <SfIconSell size="xs" className="mr-1" />
-          {t('product:sale')}
-        </div>
+        {specialPrice ? (
+          <div className="absolute top-0 left-0 text-white bg-secondary-600 py-1 pl-1.5 pr-2 text-xs font-medium">
+            <SfIconSell size="xs" className="mr-1" />
+            {t('product:sale')}
+          </div>
+        ) : null}
       </div>
       <div className="flex flex-col pl-4 min-w-[180px] flex-1">
         <SfLink
@@ -49,13 +57,18 @@ export function CartProductCard({
           className="no-underline typography-text-sm sm:typography-text-lg"
         >
           {name}
+          {isLoading ? (
+            <span className="ml-2">
+              <SfLoaderCircular size="sm" />
+            </span>
+          ) : null}
         </SfLink>
         <div className="my-2 sm:mb-0">
           <ul className="text-xs font-normal leading-5 sm:typography-text-sm text-neutral-700">
             {attributes.map((attribute) => (
               <li key={attribute.name}>
                 <span className="mr-1">{attribute.name}:</span>
-                <span className="font-medium">{attribute.label}</span>
+                <span className="font-medium">{attribute.value}</span>
               </li>
             ))}
           </ul>
@@ -75,9 +88,10 @@ export function CartProductCard({
             value={value}
             minValue={minValue}
             maxValue={maxValue}
-            onChange={() => {}}
+            onChange={onChange}
             className="mt-4 sm:mt-0"
-          ></QuantitySelector>
+            disabled={isLoading}
+          />
         </div>
       </div>
     </div>

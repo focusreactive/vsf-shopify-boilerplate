@@ -11,7 +11,7 @@ interface CheckoutLayoutProps extends PropsWithChildren {
 }
 
 export function CheckoutLayout({ backLabel, backHref, children, heading }: CheckoutLayoutProps): JSX.Element {
-  const { data: cart, isLoading } = useCart();
+  const { cart, isLoading } = useCart();
 
   return (
     <>

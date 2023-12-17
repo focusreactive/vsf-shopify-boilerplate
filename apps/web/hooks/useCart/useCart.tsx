@@ -1,15 +1,18 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { sdk } from '~/sdk';
-import { Product, Variant } from '~/sdk/shopify/types';
+import { Product, Variant, CartDetails } from '~/sdk/shopify/types';
 
 interface CartContextType {
   cartId: string | null;
   selectedVariantId: string | null;
+  cart: CartDetails | null;
   addOrUpdateCartItem: (quantity: number) => void;
   removeCartItem: (lineId: string) => void;
   changeCartItemQuantity: (lineId: string, quantity: number) => void;
   setSelectedVariant: (selectedOptions: Record<string, string>) => void;
+  addSelectedVariantToCart: (quantity: number) => void;
+  isLoading: boolean;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -26,46 +29,80 @@ const findVariantBySelectedOptions = (
   product: Product,
   selectedOptions: Record<string, string>,
 ): Variant | undefined => {
-  return product.variants.find((variant) =>
+  return product?.variants.find((variant) =>
     variant.selectedOptions.every((option) => selectedOptions[option.name] === option.value),
   );
 };
 
-export const useCart = (product: Product): CartContextType => {
+export const useCart = (product?: Product): CartContextType => {
   const queryClient = useQueryClient();
   const [cartId, setCartId] = useState<string | null>(null);
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [cart, setCart] = useState<CartDetails | null>(null);
+
+  const { refetch: refetchCart, isLoading: queryIsLoading } = useQuery<CartDetails, Error>(
+    ['cart', cartId],
+    () => sdk.shopify.getCart({ cartId: cartId! }),
+    {
+      enabled: !!cartId,
+      onError: (err) => {
+        console.error('Error fetching cart:', err);
+      },
+      onSuccess: (data) => {
+        setCart(data);
+      },
+    },
+  );
+
+  useEffect(() => {
+    setIsLoading(queryIsLoading);
+  }, [queryIsLoading]);
 
   useEffect(() => {
     const storedCartId = localStorage.getItem('cartId');
     if (storedCartId) {
       setCartId(storedCartId);
-      queryClient.prefetchQuery(['cart', storedCartId], () => sdk.shopify.getCart({ cartId: storedCartId }));
+    } else if (!product) {
+      refetchCart();
     }
 
-    // Initialize with the first variant as default
     if (product?.variants?.length > 0) {
       setSelectedVariantId(product.variants[0].id);
     }
-  }, [product, queryClient]);
-
-  const updateCartMutation = useMutation(sdk.shopify.updateCart, {
-    onSuccess: (data) => {
-      queryClient.setQueryData(['cart', cartId], data);
-    },
-  });
+  }, [product, queryClient, refetchCart]);
 
   const initCartMutation = useMutation(sdk.shopify.initCart, {
+    onMutate: () => {
+      setIsLoading(true);
+    },
     onSuccess: (data) => {
       localStorage.setItem('cartId', data.id);
       setCartId(data.id);
+      setCart(data);
       queryClient.setQueryData(['cart', data.id], data);
+    },
+    onSettled: () => {
+      setIsLoading(false);
+    },
+  });
+
+  const updateCartMutation = useMutation(sdk.shopify.updateCart, {
+    onMutate: () => {
+      setIsLoading(true);
+    },
+    onSuccess: (data) => {
+      setCart(data);
+      queryClient.setQueryData(['cart', cartId], data);
+    },
+    onSettled: () => {
+      setIsLoading(false);
     },
   });
 
   const setSelectedVariant = useCallback(
     (selectedOptions) => {
-      const variant = findVariantBySelectedOptions(product, selectedOptions);
+      const variant = findVariantBySelectedOptions(product!, selectedOptions);
       if (variant) {
         setSelectedVariantId(variant.id);
       }
@@ -73,45 +110,80 @@ export const useCart = (product: Product): CartContextType => {
     [product],
   );
 
-  const addOrUpdateCartItem = useCallback(
+  const addSelectedVariantToCart = useCallback(
     (quantity = 1) => {
-      if (!selectedVariantId) throw new Error('No variant selected');
+      if (isLoading) {
+        console.error('Add to cart operation cannot be performed: cart is currently loading');
+        return;
+      }
+
+      const lineItem = { merchandiseId: selectedVariantId, quantity };
 
       if (!cartId) {
-        return initCartMutation.mutate({ lines: [{ merchandiseId: selectedVariantId, quantity }] });
+        initCartMutation.mutate({ lines: [lineItem] });
+      } else {
+        updateCartMutation.mutate({ cartId, addLines: [lineItem] });
       }
-      return updateCartMutation.mutate({ cartId, addLines: [{ merchandiseId: selectedVariantId, quantity }] });
     },
-    [cartId, selectedVariantId, initCartMutation, updateCartMutation],
+    [selectedVariantId, cartId, initCartMutation, updateCartMutation, isLoading],
+  );
+
+  const addOrUpdateCartItem = useCallback(
+    (quantity = 1) => {
+      if (isLoading) {
+        console.error('Update cart operation cannot be performed: cart is currently loading');
+        return;
+      }
+
+      if (!cartId) {
+        initCartMutation.mutate({ lines: [{ merchandiseId: selectedVariantId, quantity }] });
+      } else {
+        updateCartMutation.mutate({ cartId, addLines: [{ merchandiseId: selectedVariantId, quantity }] });
+      }
+    },
+    [selectedVariantId, cartId, initCartMutation, updateCartMutation, isLoading],
   );
 
   const removeCartItem = useCallback(
     (lineId) => {
-      return updateCartMutation.mutate({ cartId, removeLineIds: [lineId] });
+      if (isLoading) {
+        console.error('Remove item operation cannot be performed: cart is currently loading');
+        return;
+      }
+
+      updateCartMutation.mutate({ cartId, removeLineIds: [lineId] });
     },
-    [cartId, updateCartMutation],
+    [cartId, updateCartMutation, isLoading],
   );
 
   const changeCartItemQuantity = useCallback(
     (lineId, quantity) => {
-      return updateCartMutation.mutate({ cartId, updateLines: [{ id: lineId, quantity }] });
+      if (isLoading) {
+        console.error('Change quantity operation cannot be performed: cart is currently loading');
+        return;
+      }
+
+      updateCartMutation.mutate({ cartId, updateLines: [{ id: lineId, quantity }] });
     },
-    [cartId, updateCartMutation],
+    [cartId, updateCartMutation, isLoading],
   );
 
   return {
     cartId,
+    cart,
     selectedVariantId,
     addOrUpdateCartItem,
     removeCartItem,
     changeCartItemQuantity,
     setSelectedVariant,
+    addSelectedVariantToCart,
+    isLoading,
   };
 };
 
 interface CartProviderProps {
   children: React.ReactNode;
-  product: Product;
+  product?: Product;
 }
 
 export const CartProvider = ({ children, product }: CartProviderProps) => {
