@@ -5,6 +5,7 @@ import { Product, Variant } from '~/sdk/shopify/types';
 
 interface CartContextType {
   cartId: string | null;
+  selectedVariantId: string | null;
   addOrUpdateCartItem: (quantity: number) => void;
   removeCartItem: (lineId: string) => void;
   changeCartItemQuantity: (lineId: string, quantity: number) => void;
@@ -41,7 +42,12 @@ export const useCart = (product: Product): CartContextType => {
       setCartId(storedCartId);
       queryClient.prefetchQuery(['cart', storedCartId], () => sdk.shopify.getCart({ cartId: storedCartId }));
     }
-  }, [queryClient]);
+
+    // Initialize with the first variant as default
+    if (product?.variants?.length > 0) {
+      setSelectedVariantId(product.variants[0].id);
+    }
+  }, [product, queryClient]);
 
   const updateCartMutation = useMutation(sdk.shopify.updateCart, {
     onSuccess: (data) => {
@@ -95,6 +101,7 @@ export const useCart = (product: Product): CartContextType => {
 
   return {
     cartId,
+    selectedVariantId,
     addOrUpdateCartItem,
     removeCartItem,
     changeCartItemQuantity,
