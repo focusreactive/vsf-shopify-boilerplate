@@ -18,10 +18,21 @@ import { Trans, useTranslation } from 'next-i18next';
 import { QuantitySelector, Tag } from '~/components';
 import type { PurchaseCardProps } from '~/components';
 import { useCartContext } from '~/hooks';
+import { CartLine } from '~/sdk/shopify/types';
+
+function calcAddedProducts(productId: string, lines?: CartLine[]): number {
+  if (!lines || lines.length === 0) {
+    return 0;
+  }
+  return lines
+    .filter(({ merchandise: { product } }) => product.id === productId)
+    .map(({ quantity }) => quantity)
+    .reduce((s, x) => s + x, 0);
+}
 
 export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
   const { t } = useTranslation(['product', 'common']);
-  const { addSelectedVariantToCart, selectedVariantId } = useCartContext();
+  const { addSelectedVariantToCart, selectedVariantId, cart } = useCartContext();
   const minProductQuantity = 1;
   const maxProductQuantity = 999;
   const [productQuantity, { set }] = useCounter(minProductQuantity);
@@ -35,6 +46,8 @@ export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
   function handleAddToCart() {
     addSelectedVariantToCart(productQuantity);
   }
+
+  const productsInCart = calcAddedProducts(product.id, cart?.lines);
 
   return (
     <div
@@ -76,7 +89,7 @@ export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
       <div className="py-4 mb-4 border-gray-200 border-y">
         <Tag className="w-full mb-4">
           <SfIconShoppingCartCheckout />
-          {t('common:numberInCart', { count: 1 })}
+          {t('common:numberInCart', { count: productsInCart })}
         </Tag>
         <div className="flex flex-col md:flex-row flex-wrap gap-4">
           <QuantitySelector

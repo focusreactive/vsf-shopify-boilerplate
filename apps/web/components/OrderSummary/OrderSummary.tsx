@@ -3,26 +3,13 @@ import classNames from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { Divider, Tag } from '~/components';
 import type { OrderSummaryPropsType } from '~/components';
-import { CartDetails } from '~/sdk/shopify/types';
 
 const totalCouponDiscounts = null;
 const shippingMethod = null;
 
-function totalItems(cart: CartDetails): { count: number; lines?: number } {
-  if (cart.lines.length === 1) {
-    return { count: cart.lines[0].quantity };
-  }
-  const sum = cart.lines.reduce((accumulator, { quantity }) => accumulator + quantity, 0);
-  if (cart.lines.length === sum) {
-    return { count: sum };
-  }
-
-  return { count: sum, lines: cart.lines.length };
-}
-
-export function OrderSummary({ cart, className = '', children }: OrderSummaryPropsType): JSX.Element {
+export function OrderSummary({ cart, totalItems, className = '', children }: OrderSummaryPropsType): JSX.Element {
   const { t } = useTranslation('cart');
-  const { count, lines } = totalItems(cart);
+  const { count, lines } = totalItems;
   let total = t('itemsInCart', { count });
   if (lines) {
     total = t('itemsInCartTotal', { count, lines });

@@ -13,6 +13,7 @@ interface CartContextType {
   setSelectedVariant: (selectedOptions: Record<string, string>) => void;
   addSelectedVariantToCart: (quantity: number) => void;
   isLoading: boolean;
+  totalItems: { count: number; lines?: number };
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -24,6 +25,21 @@ export const useCartContext = () => {
   }
   return context;
 };
+
+function calcTotalItems(cart?: CartDetails | null): { count: number; lines?: number } {
+  if (!cart) {
+    return { count: 0 };
+  }
+  if (cart.lines.length === 1) {
+    return { count: cart.lines[0].quantity };
+  }
+  const sum = cart.lines.reduce((accumulator, { quantity }) => accumulator + quantity, 0);
+  if (cart.lines.length === sum) {
+    return { count: sum };
+  }
+
+  return { count: sum, lines: cart.lines.length };
+}
 
 const findVariantBySelectedOptions = (
   product: Product,
@@ -171,6 +187,7 @@ export const useCart = (product?: Product): CartContextType => {
   return {
     cartId,
     cart,
+    totalItems: calcTotalItems(cart),
     selectedVariantId,
     addOrUpdateCartItem,
     removeCartItem,

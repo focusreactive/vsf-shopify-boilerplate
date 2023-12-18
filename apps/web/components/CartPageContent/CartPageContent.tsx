@@ -8,7 +8,7 @@ import emptyCartImage from '~/public/images/empty-cart.svg';
 
 export function CartPageContent() {
   const { t } = useTranslation('cart');
-  const { cart, changeCartItemQuantity, isLoading, removeCartItem } = useCart();
+  const { cart, changeCartItemQuantity, isLoading, removeCartItem, totalItems } = useCart();
 
   const handleChangeQuantity = (lineId: string, currentQuantity: number) => (quantity: number) => {
     if (isLoading) {
@@ -47,7 +47,7 @@ export function CartPageContent() {
           />
         ))}
       </div>
-      <OrderSummary cart={cart} className="col-span-5 md:sticky md:top-20 h-fit">
+      <OrderSummary cart={cart} totalItems={totalItems} className="col-span-5 md:sticky md:top-20 h-fit">
         <SfButton as={Link} href="/checkout" size="lg" className="w-full mb-4 md:mb-0">
           {t('goToCheckout')}
         </SfButton>

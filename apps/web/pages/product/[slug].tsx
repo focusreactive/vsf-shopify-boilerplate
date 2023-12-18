@@ -13,7 +13,7 @@ import {
   PurchaseCard,
   RecommendedProducts,
 } from '~/components';
-import { useProduct, useProductRecommended, prefetchProduct, useProductBreadcrumbs, CartProvider } from '~/hooks';
+import { useProduct, useProductRecommended, prefetchProduct, useProductBreadcrumbs } from '~/hooks';
 import { DefaultLayout } from '~/layouts';
 import { flattenArray } from '~/sdk/shopify/fattenArray';
 
@@ -64,31 +64,29 @@ export function ProductPage() {
   const images = flattenArray(product.gallery);
 
   return (
-    <CartProvider product={product}>
-      <DefaultLayout breadcrumbs={breadcrumbs}>
-        <Head>
-          <title>{`${product.title} | Vue Storefront Demo`}</title>
-        </Head>
-        <NarrowContainer>
-          <div className="md:grid gap-x-6 grid-areas-product-page grid-cols-product-page">
-            <section className="grid-in-left-top md:h-full xl:max-h-[700px]">
-              <Gallery images={images} />
-            </section>
-            <section className="mb-10 grid-in-right md:mb-0">
-              <PurchaseCard product={product} />
-            </section>
-            <section className="grid-in-left-bottom md:mt-8">
-              <ProductProperties product={product} showColors={false} />
-              <ProductAccordion product={product} />
-            </section>
-            <Divider className="mt-4 mb-2" />
-          </div>
-          <section className="mx-4 mt-28 mb-20">
-            <RecommendedProducts products={recommendedProducts} />
+    <DefaultLayout breadcrumbs={breadcrumbs} product={product}>
+      <Head>
+        <title>{`${product.title} | Vue Storefront Demo`}</title>
+      </Head>
+      <NarrowContainer>
+        <div className="md:grid gap-x-6 grid-areas-product-page grid-cols-product-page">
+          <section className="grid-in-left-top md:h-full xl:max-h-[700px]">
+            <Gallery images={images} />
           </section>
-        </NarrowContainer>
-      </DefaultLayout>
-    </CartProvider>
+          <section className="mb-10 grid-in-right md:mb-0">
+            <PurchaseCard product={product} />
+          </section>
+          <section className="grid-in-left-bottom md:mt-8">
+            <ProductProperties product={product} showColors={false} />
+            <ProductAccordion product={product} />
+          </section>
+          <Divider className="mt-4 mb-2" />
+        </div>
+        <section className="mx-4 mt-28 mb-20">
+          <RecommendedProducts products={recommendedProducts} />
+        </section>
+      </NarrowContainer>
+    </DefaultLayout>
   );
 }
 
