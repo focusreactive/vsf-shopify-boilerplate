@@ -14,9 +14,11 @@ export type CartProductCardProps = {
   minValue: number;
   name?: Maybe<string>;
   price: number;
+  priceTotal: number;
   specialPrice: number;
   value: number;
   slug: string;
   onChangeQuantity: (q: number) => void;
+  onRemoveLine: () => void;
   isLoading: boolean;
 };

@@ -21,10 +21,12 @@ import { useCartContext } from '~/hooks';
 
 export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
   const { t } = useTranslation(['product', 'common']);
-  const { addSelectedVariantToCart } = useCartContext();
+  const { addSelectedVariantToCart, selectedVariantId } = useCartContext();
   const minProductQuantity = 1;
   const maxProductQuantity = 999;
   const [productQuantity, { set }] = useCounter(minProductQuantity);
+
+  const selectedVariant = product.variants.find(({ id }) => id === selectedVariantId);
 
   function handleOnChange(nextValue: number) {
     set(clamp(nextValue, minProductQuantity, maxProductQuantity));
@@ -40,20 +42,24 @@ export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
       data-testid="purchase-card"
       {...attributes}
     >
-      <Tag variant="secondary" strong className="mb-4">
-        <SfIconSell size="sm" className="ml-1" />
-        <span className="mr-1">{t('sale')}</span>
-      </Tag>
+      {selectedVariant?.compareAtPrice ? (
+        <Tag variant="secondary" strong className="mb-4">
+          <SfIconSell size="sm" className="ml-1" />
+          <span className="mr-1">{t('sale')}</span>
+        </Tag>
+      ) : null}
       <h1 className="mb-1 font-bold typography-headline-4" data-testid="product-name">
         {product.title}
       </h1>
       <div className="my-1">
         <span className="mr-2 text-secondary-700 font-bold font-headings text-2xl" data-testid="price">
-          ${product.price?.value.amount}
+          ${selectedVariant?.price?.amount}
         </span>
-        <span className="text-base font-normal text-neutral-500 line-through">
-          ${product.price?.regularPrice.amount}
-        </span>
+        {selectedVariant?.compareAtPrice ? (
+          <span className="text-base font-normal text-neutral-500 line-through">
+            ${selectedVariant?.compareAtPrice?.amount}
+          </span>
+        ) : null}
       </div>
       <div className="inline-flex items-center mt-4 mb-2">
         <SfRating size="xs" value={product.rating?.average} max={5} />

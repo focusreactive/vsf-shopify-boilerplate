@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef } from 'react';
 import { useCounter } from 'react-use';
-import { SfButton, SfIconAdd, SfIconRemove } from '@storefront-ui/react';
+import { SfButton, SfIconAdd, SfIconRemove, SfIconDelete } from '@storefront-ui/react';
 import { clamp } from '@storefront-ui/shared';
 import { useTranslation } from 'next-i18next';
 import type { QuantitySelectorProps } from '~/components';

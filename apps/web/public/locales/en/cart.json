@@ -2,6 +2,7 @@
   "myCart": "My Cart",
   "orderSummary": "Order Summary",
   "itemsInCart": "(Items: {{count}})",
+  "itemsInCartTotal": "(Positions: {{lines}}, items total: {{count}})",
   "itemsSubtotal": "Items subtotal",
   "originalPrice": "Original price",
   "savings": "Savings",

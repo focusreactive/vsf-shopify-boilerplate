@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { SfLink, SfIconSell, SfLoaderCircular } from '@storefront-ui/react';
+import { SfLink, SfIconSell, SfLoaderCircular, SfButton, SfIconDelete } from '@storefront-ui/react';
 import { useTranslation } from 'next-i18next';
 import { QuantitySelector } from '~/components';
 import type { CartProductCardProps } from '~/components';
@@ -13,10 +13,12 @@ export function CartProductCard({
   minValue,
   name,
   price,
+  priceTotal,
   specialPrice,
   value,
   slug,
   onChangeQuantity,
+  onRemoveLine,
   isLoading,
 }: CartProductCardProps) {
   const { t } = useTranslation('product');
@@ -50,19 +52,34 @@ export function CartProductCard({
         ) : null}
       </div>
       <div className="flex flex-col pl-4 min-w-[180px] flex-1">
-        <SfLink
-          as={Link}
-          href={`/product/${slug}`}
-          variant="secondary"
-          className="no-underline typography-text-sm sm:typography-text-lg"
-        >
-          {name}
-          {isLoading ? (
-            <span className="ml-2">
-              <SfLoaderCircular size="sm" />
-            </span>
-          ) : null}
-        </SfLink>
+        <div className="items-start justify-between sm:items-center sm:mt-auto flex flex-col sm:flex-row">
+          <SfLink
+            as={Link}
+            href={`/product/${slug}`}
+            variant="secondary"
+            className="no-underline typography-text-sm sm:typography-text-lg"
+          >
+            {name}
+            {isLoading ? (
+              <span className="ml-2">
+                <SfLoaderCircular size="sm" />
+              </span>
+            ) : null}
+          </SfLink>
+          <div>
+            <SfButton
+              data-testid="cartLineRemoveButton"
+              type="button"
+              variant="tertiary"
+              square
+              disabled={isLoading}
+              aria-label={t('cartLineRemove')}
+              onClick={onRemoveLine}
+            >
+              <SfIconDelete color="#bcbcbc" />
+            </SfButton>
+          </div>
+        </div>
         <div className="my-2 sm:mb-0">
           <ul className="text-xs font-normal leading-5 sm:typography-text-sm text-neutral-700">
             {attributes.map((attribute) => (
@@ -82,7 +99,10 @@ export function CartProductCard({
               </span>
             </span>
           ) : (
-            <span className="font-bold sm:ml-auto sm:order-1 typography-text-sm sm:typography-text-lg">${price}</span>
+            <span className="font-bold sm:ml-auto sm:order-1 typography-text-sm sm:typography-text-lg">
+              <span className="font-light typography-text-xs sm:typography-text-sm">{`$${price} x ${value} = `}</span>$
+              {priceTotal}
+            </span>
           )}
           <QuantitySelector
             value={value}

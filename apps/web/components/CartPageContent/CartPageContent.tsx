@@ -8,7 +8,7 @@ import emptyCartImage from '~/public/images/empty-cart.svg';
 
 export function CartPageContent() {
   const { t } = useTranslation('cart');
-  const { cart, changeCartItemQuantity, isLoading } = useCart();
+  const { cart, changeCartItemQuantity, isLoading, removeCartItem } = useCart();
 
   const handleChangeQuantity = (lineId: string, currentQuantity: number) => (quantity: number) => {
     if (isLoading) {
@@ -18,6 +18,10 @@ export function CartPageContent() {
       return;
     }
     changeCartItemQuantity(lineId, quantity);
+  };
+
+  const handleRemoveLine = (lineId: string) => () => {
+    removeCartItem(lineId);
   };
 
   return cart?.lines.length ? (
@@ -31,12 +35,14 @@ export function CartPageContent() {
             imageAlt={merchandise.image?.altText}
             name={merchandise.product.title}
             price={merchandise.price?.amount || 0}
+            priceTotal={Math.round((merchandise.price?.amount || 0) * quantity * 100) / 100}
             specialPrice={merchandise.unitPrice?.amount || 0}
             maxValue={10}
             minValue={1}
             value={quantity}
             slug={merchandise.product.slug}
             onChangeQuantity={handleChangeQuantity(id, quantity)}
+            onRemoveLine={handleRemoveLine(id)}
             isLoading={isLoading}
           />
         ))}

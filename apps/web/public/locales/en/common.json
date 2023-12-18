@@ -13,6 +13,7 @@
   "quantitySelector": "Quantity Selector",
   "quantitySelectorDecrease": "Decrease value",
   "quantitySelectorIncrease": "Increase value",
+  "cartLineRemove": "Remove Position",
   "of": "of",
   "scrollTop": "Scroll to top",
   "numberInCart_one": "{{count}} product in cart",

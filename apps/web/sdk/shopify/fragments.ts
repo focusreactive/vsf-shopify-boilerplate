@@ -13,6 +13,9 @@ const variant = `#graphql
     amount
     currencyCode
   }
+  compareAtPrice {
+    amount
+  }
 }
 `;
 

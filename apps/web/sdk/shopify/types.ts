@@ -18,6 +18,9 @@ export type Variant = {
     amount: number;
     currencyCode: string;
   };
+  compareAtPrice?: {
+    amount: number;
+  };
 };
 
 export type Option = {
@@ -122,5 +125,16 @@ export type CartLine = {
 export type CartDetails = {
   id: string;
   checkoutUrl: string;
+  cost: {
+    subtotalAmount: {
+      amount: number;
+    };
+    totalTaxAmount: {
+      amount: number;
+    };
+    totalAmount: {
+      amount: number;
+    };
+  };
   lines: CartLine[];
 };
