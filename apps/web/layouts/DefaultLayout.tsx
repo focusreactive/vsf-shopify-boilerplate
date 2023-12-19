@@ -13,7 +13,7 @@ import {
   NarrowContainer,
   Breadcrumbs,
 } from '~/components';
-import { CartProvider, useCart } from '~/hooks';
+import { CartProvider, useCartContext } from '~/hooks';
 import { Product } from '~/sdk/shopify/types';
 
 type LayoutPropsType = PropsWithChildren & {
@@ -21,9 +21,29 @@ type LayoutPropsType = PropsWithChildren & {
   product?: Product;
 };
 
+const CartButton = () => {
+  const { totalItems } = useCartContext();
+  const { t } = useTranslation();
+
+  return (
+    <SfButton
+      className="mr-2 -ml-0.5 text-white bg-primary-700 hover:bg-primary-800 hover:text-white active:bg-primary-900 active:text-white"
+      as={Link}
+      href="/cart"
+      aria-label={t('numberInCart', totalItems)}
+      variant="tertiary"
+      square
+      slotPrefix={
+        <Badge bordered value={totalItems.count} className="text-neutral-900 bg-white">
+          <SfIconShoppingCart />
+        </Badge>
+      }
+    />
+  );
+};
+
 export function DefaultLayout({ children, breadcrumbs = [], product }: LayoutPropsType): JSX.Element {
   const { t } = useTranslation();
-  const { totalItems } = useCart();
 
   return (
     <CartProvider product={product}>
@@ -39,19 +59,7 @@ export function DefaultLayout({ children, breadcrumbs = [], product }: LayoutPro
         </SfButton>
         <Search className="hidden md:block flex-1" />
         <nav className="hidden md:flex md:flex-row md:flex-nowrap">
-          <SfButton
-            className="mr-2 -ml-0.5 text-white bg-primary-700 hover:bg-primary-800 hover:text-white active:bg-primary-900 active:text-white"
-            as={Link}
-            href="/cart"
-            aria-label={t('numberInCart', totalItems)}
-            variant="tertiary"
-            square
-            slotPrefix={
-              <Badge bordered value={totalItems.count} className="text-neutral-900 bg-white">
-                <SfIconShoppingCart />
-              </Badge>
-            }
-          />
+          <CartButton />
         </nav>
       </NavbarTop>
       {breadcrumbs?.length > 0 && (

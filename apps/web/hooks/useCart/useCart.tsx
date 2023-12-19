@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { sdk } from '~/sdk';
 import { Product, Variant, CartDetails } from '~/sdk/shopify/types';
@@ -57,20 +57,21 @@ export const useCart = (product?: Product): CartContextType => {
   const [isLoading, setIsLoading] = useState(false);
   const [cart, setCart] = useState<CartDetails | null>(null);
 
-  const { refetch: refetchCart, isLoading: queryIsLoading } = useQuery<CartDetails, Error>(
+  const { refetch: refetchCart, isFetching: queryIsLoading } = useQuery<CartDetails | null, Error>(
     ['cart', cartId],
-    () => sdk.shopify.getCart({ cartId: cartId! }),
+    () => (cartId ? sdk.shopify.getCart({ cartId }) : null),
     {
       enabled: !!cartId,
       onError: (err) => {
         console.error('Error fetching cart:', err);
       },
-      onSuccess: (data) => {
+      onSuccess: (data: CartDetails) => {
         setCart(data);
       },
     },
   );
 
+  React.useDebugValue({ isLoading, cartId, cart, selectedVariantId, queryIsLoading });
   useEffect(() => {
     setIsLoading(queryIsLoading);
   }, [queryIsLoading]);
@@ -83,7 +84,7 @@ export const useCart = (product?: Product): CartContextType => {
       refetchCart();
     }
 
-    if (product?.variants?.length > 0) {
+    if (product?.variants?.length && product?.variants?.length > 0) {
       setSelectedVariantId(product.variants[0].id);
     }
   }, [product, queryClient, refetchCart]);
@@ -92,7 +93,7 @@ export const useCart = (product?: Product): CartContextType => {
     onMutate: () => {
       setIsLoading(true);
     },
-    onSuccess: (data) => {
+    onSuccess: (data: CartDetails) => {
       localStorage.setItem('cartId', data.id);
       setCartId(data.id);
       setCart(data);
@@ -107,7 +108,7 @@ export const useCart = (product?: Product): CartContextType => {
     onMutate: () => {
       setIsLoading(true);
     },
-    onSuccess: (data) => {
+    onSuccess: (data: CartDetails) => {
       setCart(data);
       queryClient.setQueryData(['cart', cartId], data);
     },
@@ -135,10 +136,10 @@ export const useCart = (product?: Product): CartContextType => {
 
       const lineItem = { merchandiseId: selectedVariantId, quantity };
 
-      if (!cartId) {
-        initCartMutation.mutate({ lines: [lineItem] });
-      } else {
+      if (cartId) {
         updateCartMutation.mutate({ cartId, addLines: [lineItem] });
+      } else {
+        initCartMutation.mutate({ lines: [lineItem] });
       }
     },
     [selectedVariantId, cartId, initCartMutation, updateCartMutation, isLoading],
@@ -151,17 +152,17 @@ export const useCart = (product?: Product): CartContextType => {
         return;
       }
 
-      if (!cartId) {
-        initCartMutation.mutate({ lines: [{ merchandiseId: selectedVariantId, quantity }] });
-      } else {
+      if (cartId) {
         updateCartMutation.mutate({ cartId, addLines: [{ merchandiseId: selectedVariantId, quantity }] });
+      } else {
+        initCartMutation.mutate({ lines: [{ merchandiseId: selectedVariantId, quantity }] });
       }
     },
     [selectedVariantId, cartId, initCartMutation, updateCartMutation, isLoading],
   );
 
   const removeCartItem = useCallback(
-    (lineId) => {
+    (lineId: string) => {
       if (isLoading) {
         console.error('Remove item operation cannot be performed: cart is currently loading');
         return;
@@ -173,7 +174,7 @@ export const useCart = (product?: Product): CartContextType => {
   );
 
   const changeCartItemQuantity = useCallback(
-    (lineId, quantity) => {
+    (lineId: string, quantity: number) => {
       if (isLoading) {
         console.error('Change quantity operation cannot be performed: cart is currently loading');
         return;
