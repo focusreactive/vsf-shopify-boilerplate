@@ -14,7 +14,7 @@ export function CategoryPageContent({
   totalProducts,
   itemsPerPage = 24,
 }: CategoryPageContentProps): JSX.Element {
-  const { t } = useTranslation('category');
+  const { t } = useTranslation('collection');
   const isWideScreen = useMedia('(min-width: 1024px)', false);
   const isTabletScreen = useMedia('(min-width: 768px)', false);
   const { isOpen, open, close } = useDisclosure({ initialValue: false });
@@ -51,19 +51,24 @@ export function CategoryPageContent({
                 className="grid grid-cols-1 2xs:grid-cols-2 gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 mb-10 md:mb-5"
                 data-testid="category-grid"
               >
-                {products.map(({ id, name, rating, price, primaryImage, slug }, index) => (
-                  <ProductCard
-                    key={id}
-                    name={name}
-                    ratingCount={rating?.count}
-                    rating={rating?.average}
-                    price={price?.value.amount}
-                    imageUrl={primaryImage?.url}
-                    imageAlt={primaryImage?.alt}
-                    slug={slug}
-                    priority={index === 0}
-                  />
-                ))}
+                {products.map((product) => {
+                  const { id, title, description, priceRange, primaryImage, slug, variants } = product;
+                  return (
+                    <ProductCard
+                      key={id}
+                      descriptionClassName="h-[260px]"
+                      name={title}
+                      description={description}
+                      compareAtPrice={variants[0]?.compareAtPrice?.amount}
+                      price={priceRange.minVariantPrice.amount}
+                      currencyCode={priceRange.minVariantPrice.currencyCode}
+                      imageUrl={primaryImage?.url}
+                      imageAlt={primaryImage?.altText}
+                      slug={slug}
+                      product={product}
+                    />
+                  );
+                })}
               </section>
             ) : (
               <CategoryEmptyState />

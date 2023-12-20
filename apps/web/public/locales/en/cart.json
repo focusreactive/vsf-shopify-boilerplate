@@ -1,4 +1,5 @@
 {
+  "homePage": "Home Page",
   "myCart": "My Cart",
   "orderSummary": "Order Summary",
   "itemsInCart": "(Items: {{count}})",

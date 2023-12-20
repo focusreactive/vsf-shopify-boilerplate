@@ -1,4 +1,6 @@
 {
+  "homePage": "Home page",
+  "collections": "Collections",
   "allFromCategory": "All {{name}}",
   "listSettings": "List settings",
   "closeListSettings": "Close list settings",

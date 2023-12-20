@@ -1,9 +1,9 @@
 import { PropsWithChildren, ReactNode } from 'react';
-import { SfProductCatalogItem } from '@vue-storefront/unified-data-model';
+import { Product } from '~/sdk/shopify/types';
 
 export interface CategoryPageContentProps extends PropsWithChildren {
   title: string;
-  products: SfProductCatalogItem[];
+  products: Product[];
   totalProducts: number;
   sidebar?: ReactNode;
   itemsPerPage?: number;

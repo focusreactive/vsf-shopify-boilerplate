@@ -25,20 +25,22 @@ interface ProductPageQuery extends ParsedUrlQuery {
   collection?: string[];
 }
 
-export async function getServerSideProps({ res, params }: GetServerSidePropsContext<ProductPageQuery>) {
+type CollectionPageProps = {
+  collectionName?: string;
+};
+
+export async function getServerSideProps({ res, params, locale }: GetServerSidePropsContext<ProductPageQuery>) {
   res.setHeader('Cache-Control', 'no-cache');
 
-  const collection = (params?.collection && params?.collection[0]) || undefined;
+  const collection = (params?.collection && params?.collection[0]) || null;
   if (/^hidden-.*/.test(collection || '')) {
     return {
       notFound: true,
     };
   }
-  // console.log("🚀 ~ file: [[...collection]].tsx:32 ~ getServerSideProps ~ collection:", collection)
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['products', collection || 'all'], () => fetchProducts(collection));
+  await queryClient.prefetchQuery(['products', collection || 'all'], () => fetchProducts(collection || ''));
   const data = queryClient.getQueryData(['products', collection || 'all']);
-  // console.log("🚀 ~ file: [[...collection]].tsx:36 ~ getServerSideProps ~ data:", data)
 
   if (!data) {
     return {
@@ -48,42 +50,93 @@ export async function getServerSideProps({ res, params }: GetServerSidePropsCont
 
   return {
     props: {
-      collection,
+      key: 'cart',
+      ...(await serverSideTranslations(locale as string, ['collection', 'common', 'footer', 'product'])),
+      collectionName: collection,
       dehydratedState: dehydrate(queryClient),
     },
   };
 }
 
-export default function CategoryPage({ collection }) {
-  const { t } = useTranslation('category');
+export default function CollectionPage({ collectionName }: CollectionPageProps) {
+  const { t } = useTranslation('collection');
+  const { products, collection } = useProducts(collectionName);
+
+  const collectionTitle = collection?.title || t('allProducts') || 'All Products';
+  const collectionSlug = collection ? `/collection/${collection.slug}` : '/collection';
   const breadcrumbs: Breadcrumb[] = [
-    { name: t('common:home'), link: '/' },
-    { name: t('allProducts'), link: '/category' },
+    { name: t('homePage'), link: '/' },
+    { name: collectionTitle, link: collectionSlug },
   ];
-  const { products } = useProducts(collection);
 
   if (!products) {
     return null;
   }
 
-  // const { products, pagination, subCategories, facets } = productsCatalog;
-  // const categories: CategoryTreeItem[] = subCategories.map(({ name, productCount }) => ({
-  //   name,
-  //   count: productCount || 0,
-  //   href: '/category',
-  // }));
+  const sub = [
+    { name: 'Oxygen', count: 150, href: '/collection/oxygen' },
+    { name: 'Hydrogen', count: 85, href: '/collection/hydrogen' },
+    { name: 'Accessories', count: 200, href: '/collection/gifts-accessories' },
+  ];
+
+  const facets = [
+    {
+      label: 'Color',
+      name: 'color',
+      values: [
+        { label: 'Red', value: 'red' },
+        { label: 'Blue', value: 'blue' },
+        { label: 'Green', value: 'green' },
+      ],
+    },
+    {
+      label: 'Size',
+      name: 'size',
+      values: [
+        { label: 'Small', value: 'S' },
+        { label: 'Medium', value: 'M' },
+        { label: 'Large', value: 'L' },
+      ],
+    },
+    {
+      label: 'Brand',
+      name: 'brand',
+      values: [
+        { label: 'Brand A', value: 'brand-a' },
+        { label: 'Brand B', value: 'brand-b' },
+      ],
+    },
+    {
+      label: 'Price Range',
+      name: 'price',
+      values: [
+        { label: 'Under $50', value: 'under-50' },
+        { label: '$50 to $100', value: '50-100' },
+        { label: 'Over $100', value: 'over-100' },
+      ],
+    },
+    {
+      label: 'Material',
+      name: 'material',
+      values: [
+        { label: 'Cotton', value: 'cotton' },
+        { label: 'Polyester', value: 'polyester' },
+        { label: 'Leather', value: 'leather' },
+      ],
+    },
+  ];
 
   return (
     <DefaultLayout breadcrumbs={breadcrumbs}>
       <CategoryPageContent
-        title={t('allProducts')}
+        title={collectionTitle}
         products={products}
         totalProducts={products.length}
         sidebar={
           <>
-            {/* <CategoryTree parent={{ name: t('allProducts'), href: '/category' }} categories={categories} /> */}
+            <CategoryTree parent={{ name: t('allProducts'), href: '/collection' }} categories={sub} />
             <CategorySorting />
-            {/* <CategoryFilters facets={facets} /> */}
+            <CategoryFilters facets={facets} />
           </>
         }
       />

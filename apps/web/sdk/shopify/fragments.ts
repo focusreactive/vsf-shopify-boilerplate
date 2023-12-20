@@ -81,7 +81,7 @@ const collection = `#graphql
   id
   title
   description
-  handle
+  slug: handle
   image {
     url
     altText
