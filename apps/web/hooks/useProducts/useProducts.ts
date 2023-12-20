@@ -1,24 +1,25 @@
-import { QueryClient, useQuery } from '@tanstack/react-query';
-import type { GetProducts } from '@vue-storefront/storefront-boilerplate-sdk';
+import { useQuery } from '@tanstack/react-query';
 import { sdk } from '~/sdk';
-
-const fetchProducts = async (): Promise<GetProducts> => {
-  return sdk.commerce.getProducts();
-};
-
-export async function prefetchProducts(): Promise<QueryClient> {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['products'], () => fetchProducts());
-
-  return queryClient;
-}
+import { PageInfo, Product } from '~/sdk/shopify/types';
 
 /**
- * Hook for getting products catalog data
+ * Hook for getting products catalog data, optionally filtered by collection
  */
-export function useProducts() {
-  return useQuery(['products'], () => fetchProducts(), {
+export const useProducts = (collection?: string): { products: Product[]; isFetching: boolean; pageInfo?: PageInfo } => {
+  const fetchProducts = async () => {
+    return await sdk.shopify.getProducts({ collectionHandle: collection });
+  };
+
+  const { data, isFetching } = useQuery(['products', collection], fetchProducts, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
-}
+
+  const products = (data?.products || []) as unknown as Product[];
+
+  return {
+    products,
+    pageInfo: data?.pageInfo,
+    isFetching,
+  };
+};

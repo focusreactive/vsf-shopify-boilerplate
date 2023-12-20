@@ -138,3 +138,8 @@ export type CartDetails = {
   };
   lines: CartLine[];
 };
+
+export type PageInfo = {
+  endCursor: string;
+  hasNextPage: boolean;
+};
