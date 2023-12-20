@@ -12,7 +12,7 @@ export const fetchProducts = async (collection?: string) => {
 export const useProducts = (collection?: string): { products: Product[]; isFetching: boolean; pageInfo?: PageInfo } => {
   const fetch = () => fetchProducts(collection);
 
-  const { data, isFetching } = useQuery(['products', collection], fetch, {
+  const { data, isFetching } = useQuery(['products', collection || 'all'], fetch, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });

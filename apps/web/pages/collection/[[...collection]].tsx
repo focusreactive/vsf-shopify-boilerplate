@@ -22,15 +22,23 @@ export async function prefetchProducts(collection?: string): Promise<QueryClient
 }
 
 interface ProductPageQuery extends ParsedUrlQuery {
-  collection?: string;
+  collection?: string[];
 }
 
 export async function getServerSideProps({ res, params }: GetServerSidePropsContext<ProductPageQuery>) {
   res.setHeader('Cache-Control', 'no-cache');
 
-  const collection = params?.collection;
-  const queryClient = await prefetchProducts();
+  const collection = (params?.collection && params?.collection[0]) || undefined;
+  if (/^hidden-.*/.test(collection || '')) {
+    return {
+      notFound: true,
+    };
+  }
+  // console.log("🚀 ~ file: [[...collection]].tsx:32 ~ getServerSideProps ~ collection:", collection)
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(['products', collection || 'all'], () => fetchProducts(collection));
   const data = queryClient.getQueryData(['products', collection || 'all']);
+  // console.log("🚀 ~ file: [[...collection]].tsx:36 ~ getServerSideProps ~ data:", data)
 
   if (!data) {
     return {
@@ -40,18 +48,19 @@ export async function getServerSideProps({ res, params }: GetServerSidePropsCont
 
   return {
     props: {
+      collection,
       dehydratedState: dehydrate(queryClient),
     },
   };
 }
 
-export default function CategoryPage() {
+export default function CategoryPage({ collection }) {
   const { t } = useTranslation('category');
   const breadcrumbs: Breadcrumb[] = [
     { name: t('common:home'), link: '/' },
     { name: t('allProducts'), link: '/category' },
   ];
-  const { products } = useProducts();
+  const { products } = useProducts(collection);
 
   if (!products) {
     return null;
