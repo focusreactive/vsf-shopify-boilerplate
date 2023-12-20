@@ -4,6 +4,7 @@ import { SfButton, SfRating, SfCounter, SfLink, SfIconShoppingCart } from '@stor
 import classNames from 'classnames';
 import { useTranslation } from 'next-i18next';
 import type { ProductCardProps } from '~/components';
+import { useCartContext } from '~/hooks';
 import useProductRating from '~/hooks/useProductRating/useProductRating';
 
 export function ProductCard({
@@ -23,6 +24,7 @@ export function ProductCard({
 }: ProductCardProps) {
   const { t } = useTranslation();
   const { rating, ratingCount } = useProductRating(product);
+  const { addCustomVariantToCart, isLoading } = useCartContext();
 
   // TODO [>0.2] Care about getting right locale for price formatting
   const priceString = price
@@ -31,6 +33,14 @@ export function ProductCard({
   const compareString = compareAtPrice
     ? new Intl.NumberFormat('en-EN', { style: 'currency', currency: currencyCode }).format(compareAtPrice)
     : '';
+
+  const handleAddToCart = () => {
+    if (isLoading) {
+      return;
+    }
+    const variantId = product?.variants[0].id;
+    addCustomVariantToCart(1, variantId);
+  };
 
   return (
     <div
@@ -84,7 +94,7 @@ export function ProductCard({
                 {priceString}
               </span>
               <span
-                className="ml-3 font-normal line-through typography-text-sm "
+                className="ml-3 font-normal line-through typography-text-sm"
                 data-testid="product-card-vertical-price"
               >
                 {compareString}
@@ -95,7 +105,7 @@ export function ProductCard({
               {priceString}
             </span>
           )}
-          <SfButton type="button" size="sm" slotPrefix={<SfIconShoppingCart size="sm" />}>
+          <SfButton onClick={handleAddToCart} type="button" size="sm" slotPrefix={<SfIconShoppingCart size="sm" />}>
             {t('addToCartShort')}
           </SfButton>
         </div>

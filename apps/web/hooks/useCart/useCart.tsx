@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { sdk } from '~/sdk';
 import { Product, Variant, CartDetails } from '~/sdk/shopify/types';
 
+type Options = Record<string, string>;
 interface CartContextType {
   cartId: string | null;
   selectedVariantId: string | null;
@@ -10,8 +11,9 @@ interface CartContextType {
   addOrUpdateCartItem: (quantity: number) => void;
   removeCartItem: (lineId: string) => void;
   changeCartItemQuantity: (lineId: string, quantity: number) => void;
-  setSelectedVariant: (selectedOptions: Record<string, string>) => void;
+  setSelectedVariant: (selectedOptions: Options) => void;
   addSelectedVariantToCart: (quantity: number) => void;
+  addCustomVariantToCart: (quantity: number, variantId: string) => void;
   isLoading: boolean;
   totalItems: { count: number; lines?: number };
 }
@@ -41,10 +43,7 @@ function calcTotalItems(cart?: CartDetails | null): { count: number; lines?: num
   return { count: sum, lines: cart.lines.length };
 }
 
-const findVariantBySelectedOptions = (
-  product: Product,
-  selectedOptions: Record<string, string>,
-): Variant | undefined => {
+const findVariantBySelectedOptions = (product: Product, selectedOptions: Options): Variant | undefined => {
   return product?.variants.find((variant) =>
     variant.selectedOptions.every((option) => selectedOptions[option.name] === option.value),
   );
@@ -118,8 +117,11 @@ export const useCart = (product?: Product): CartContextType => {
   });
 
   const setSelectedVariant = useCallback(
-    (selectedOptions) => {
-      const variant = findVariantBySelectedOptions(product!, selectedOptions);
+    (selectedOptions: Options) => {
+      if (!product) {
+        return;
+      }
+      const variant = findVariantBySelectedOptions(product, selectedOptions);
       if (variant) {
         setSelectedVariantId(variant.id);
       }
@@ -131,6 +133,10 @@ export const useCart = (product?: Product): CartContextType => {
     (quantity = 1) => {
       if (isLoading) {
         console.error('Add to cart operation cannot be performed: cart is currently loading');
+        return;
+      }
+      if (!selectedVariantId) {
+        console.error('Add to cart operation cannot be performed: specify variantId');
         return;
       }
 
@@ -145,10 +151,36 @@ export const useCart = (product?: Product): CartContextType => {
     [selectedVariantId, cartId, initCartMutation, updateCartMutation, isLoading],
   );
 
+  const addCustomVariantToCart = useCallback(
+    (quantity = 1, variantId = selectedVariantId) => {
+      if (isLoading) {
+        console.error('Add to cart operation cannot be performed: cart is currently loading');
+        return;
+      }
+      if (!variantId || quantity < 1) {
+        console.error('Add to cart operation cannot be performed: specify variantId and quantity');
+        return;
+      }
+
+      const lineItem = { merchandiseId: variantId, quantity };
+
+      if (cartId) {
+        updateCartMutation.mutate({ cartId, addLines: [lineItem] });
+      } else {
+        initCartMutation.mutate({ lines: [lineItem] });
+      }
+    },
+    [selectedVariantId, cartId, initCartMutation, updateCartMutation, isLoading],
+  );
+
   const addOrUpdateCartItem = useCallback(
     (quantity = 1) => {
       if (isLoading) {
         console.error('Update cart operation cannot be performed: cart is currently loading');
+        return;
+      }
+      if (!selectedVariantId) {
+        console.error('Update to cart operation cannot be performed: specify variantId');
         return;
       }
 
@@ -167,6 +199,10 @@ export const useCart = (product?: Product): CartContextType => {
         console.error('Remove item operation cannot be performed: cart is currently loading');
         return;
       }
+      if (!cartId) {
+        console.error('Remove to cart operation cannot be performed: specify cartId');
+        return;
+      }
 
       updateCartMutation.mutate({ cartId, removeLineIds: [lineId] });
     },
@@ -177,6 +213,10 @@ export const useCart = (product?: Product): CartContextType => {
     (lineId: string, quantity: number) => {
       if (isLoading) {
         console.error('Change quantity operation cannot be performed: cart is currently loading');
+        return;
+      }
+      if (!cartId) {
+        console.error('Change quantity operation cannot be performed: specify cartId');
         return;
       }
 
@@ -195,6 +235,7 @@ export const useCart = (product?: Product): CartContextType => {
     changeCartItemQuantity,
     setSelectedVariant,
     addSelectedVariantToCart,
+    addCustomVariantToCart,
     isLoading,
   };
 };
