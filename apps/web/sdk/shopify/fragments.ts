@@ -76,7 +76,21 @@ const product = `#graphql
 fragment variant on ProductVariant ${variant}
 `;
 
+const collection = `#graphql
+{
+  id
+  title
+  description
+  handle
+  image {
+    url
+    altText
+  }
+}
+`;
+
 export const fragments = {
   product,
   variant,
+  collection,
 };

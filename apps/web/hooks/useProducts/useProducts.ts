@@ -2,15 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 import { sdk } from '~/sdk';
 import { PageInfo, Product } from '~/sdk/shopify/types';
 
+export const fetchProducts = async (collection?: string) => {
+  return await sdk.shopify.getProducts({ collectionHandle: collection });
+};
+
 /**
  * Hook for getting products catalog data, optionally filtered by collection
  */
 export const useProducts = (collection?: string): { products: Product[]; isFetching: boolean; pageInfo?: PageInfo } => {
-  const fetchProducts = async () => {
-    return await sdk.shopify.getProducts({ collectionHandle: collection });
-  };
+  const fetch = () => fetchProducts(collection);
 
-  const { data, isFetching } = useQuery(['products', collection], fetchProducts, {
+  const { data, isFetching } = useQuery(['products', collection], fetch, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
