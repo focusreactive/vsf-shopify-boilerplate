@@ -33,9 +33,7 @@ export function RenderContent({ content, ...attributes }: RenderContentProps): J
                 return <Display items={fields.items} />;
               }
               case 'ProductSlider': {
-                return (
-                  <ProductSlider products={fields.items} className="max-w-screen-3xl mx-auto px-4 md:px-10 mb-20" />
-                );
+                return <ProductSlider collection="homepage" className="max-w-screen-3xl mx-auto px-4 md:px-10 mb-20" />;
               }
               case 'Page': {
                 return <Page />;
