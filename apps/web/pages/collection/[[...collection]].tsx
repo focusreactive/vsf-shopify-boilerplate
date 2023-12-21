@@ -3,23 +3,10 @@ import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { ParsedUrlQuery } from 'node:querystring';
-import {
-  CategoryPageContent,
-  CategoryTree,
-  CategorySorting,
-  CategoryFilters,
-  Breadcrumb,
-  CategoryTreeItem,
-} from '~/components';
+import { CategoryPageContent, CategoryTree, CategorySorting, CategoryFilters, Breadcrumb } from '~/components';
 import { fetchProducts, useProducts } from '~/hooks';
+import { fetchCollections, useCollections } from '~/hooks/useCollections';
 import { DefaultLayout } from '~/layouts';
-
-export async function prefetchProducts(collection?: string): Promise<QueryClient> {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['products', collection || 'all'], () => fetchProducts(collection));
-
-  return queryClient;
-}
 
 interface ProductPageQuery extends ParsedUrlQuery {
   collection?: string[];
@@ -40,6 +27,8 @@ export async function getServerSideProps({ res, params, locale }: GetServerSideP
   }
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(['products', collection || 'all'], () => fetchProducts(collection || ''));
+  await queryClient.prefetchQuery(['collections'], () => fetchCollections());
+
   const data = queryClient.getQueryData(['products', collection || 'all']);
 
   if (!data) {
@@ -61,6 +50,7 @@ export async function getServerSideProps({ res, params, locale }: GetServerSideP
 export default function CollectionPage({ collectionName }: CollectionPageProps) {
   const { t } = useTranslation('collection');
   const { products, collection } = useProducts(collectionName);
+  const { collections } = useCollections();
 
   const collectionTitle = collection?.title || t('allProducts') || 'All Products';
   const collectionSlug = collection ? `/collection/${collection.slug}` : '/collection';
@@ -73,11 +63,7 @@ export default function CollectionPage({ collectionName }: CollectionPageProps) 
     return null;
   }
 
-  const sub = [
-    { name: 'Oxygen', count: 150, href: '/collection/oxygen' },
-    { name: 'Hydrogen', count: 85, href: '/collection/hydrogen' },
-    { name: 'Accessories', count: 200, href: '/collection/gifts-accessories' },
-  ];
+  const collectionsMenu = collections.map((col) => ({ name: col.title, href: `/collection/${col.slug}` }));
 
   const facets = [
     {
@@ -134,7 +120,7 @@ export default function CollectionPage({ collectionName }: CollectionPageProps) 
         totalProducts={products.length}
         sidebar={
           <>
-            <CategoryTree parent={{ name: t('allProducts'), href: '/collection' }} categories={sub} />
+            <CategoryTree parent={{ name: t('allProducts'), href: '/collection' }} collections={collectionsMenu} />
             <CategorySorting />
             <CategoryFilters facets={facets} />
           </>

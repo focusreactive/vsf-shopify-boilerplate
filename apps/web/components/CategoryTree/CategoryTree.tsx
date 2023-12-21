@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import type { CategoryTreeProps } from '~/components';
 import { CategoryTreeItem } from './CategoryTreeItem';
 
-export function CategoryTree({ parent, categories }: CategoryTreeProps) {
+export function CategoryTree({ parent, collections }: CategoryTreeProps) {
   const { t } = useTranslation('collection');
 
   return (
@@ -27,7 +27,7 @@ export function CategoryTree({ parent, categories }: CategoryTreeProps) {
         />
       )}
       <div className="mt-4 mb-6 md:mt-2" data-testid="categories">
-        {categories?.map(({ name, count, href }) => (
+        {collections?.map(({ name, count, href }) => (
           <CategoryTreeItem key={name} name={name} count={count} href={href} />
         ))}
       </div>
