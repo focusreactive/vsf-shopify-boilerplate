@@ -29,5 +29,6 @@
   "nextAriaLabel": "Go to next page",
   "secondPageAriaLabel": "Second page",
   "lastPageAriaLabel": "Last page",
-  "currentPage": "Page {{page}} of {{totalPages}}"
+  "currentPage": "Page {{page}} of {{totalPages}}",
+  "allProductsLinkText": "Browse all products"
 }
