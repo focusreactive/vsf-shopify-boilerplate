@@ -1,104 +1,44 @@
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import { sdk } from '~/sdk';
+import { getPageQuery } from './getPageQuery';
 
-const query = `#graphql
-getPages {
-  pages(first: 50) {
-    edges {
-      node {
-        id
-        title
-        handle
-        seo {
-          title
-          description
-        }
-        content: metafield(namespace: "custom", key: "content") {
-          id
-          key
-          namespace
-          value
-          references(first: 50) {
-            edges {
-              node {
-                __typename
-                ... on Metaobject {
-                  id
-                  type
-                  fields {
-                    type
-                    key
-                    value
-                    reference {
-                      __typename
-                      ... on Collection {
-                        id
-                        title
-                        slug: handle
-                      }
-                      ... on Product {
-                        id
-                        title
-                        slug: handle
-                      }
-                      ... on Metaobject {
-                        id
-                        handle
-                        fields {
-                          key
-                          type
-                          value
-                          reference {
-                            __typename
-                            ... on Page {
-                              id
-                              title
-                              slug: handle
-                            }
-                            ... on MediaImage {
-                              id
-                              alt
-                              image {
-                                url
-                                altText
-                                width
-                                height
-                                id
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+// GraphQL query to fetch all pages slugs
+const getAllPagesQuery = `#graphql
+  {
+    pages(first: 50) {
+      edges {
+        node {
+          handle
         }
       }
     }
   }
-}
 `;
 
-export async function prefetchContent(url: string): Promise<QueryClient> {
-  const queryClient = new QueryClient();
-  // TODO [>0.2]: revert and switch to Shopify SDK
-  await queryClient.prefetchQuery(['content', url], () => sdk.commerce.getContent({ url }));
-
-  return queryClient;
+// Fetches specific page content
+export async function fetchPage(slug: string) {
+  const query = getPageQuery; // Assumes getPageQuery constructs the appropriate GraphQL query
+  const response = await sdk.shopify.customQuery({ query, variables: { slug } });
+  return response.data.page;
 }
 
-/**
- * Hook for getting content data
- * @param {string} url Content url
- */
+// Fetches all pages' slugs
+export async function fetchAllPages() {
+  const response = await sdk.shopify.customQuery({ query: getAllPagesQuery });
+  return response.data.pages.edges.map((edge) => edge.node.handle);
+}
 
-export function useContent<TFields>(url: string) {
-  // TODO [>0.2]: revert and switch to Shopify SDK
-  return useQuery(['content', url], () => sdk.commerce.getContent<TFields>({ url }), {
+// Updated useContent hook
+export function useContent(slug: string) {
+  return useQuery(['content', slug], () => fetchPage(slug), {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
+}
+
+// Prefetch content for a specific URL
+export async function prefetchContent(slug: string): Promise<QueryClient> {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(['content', slug], () => fetchPage(slug));
+  return queryClient;
 }
