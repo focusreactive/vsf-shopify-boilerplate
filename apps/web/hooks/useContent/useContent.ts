@@ -55,12 +55,13 @@ type ImageComponent = {
   height: number;
 };
 
-type Component = {
+export type BlockComponent = {
   contentType: string;
+  id: string;
   fields: { [fieldName: string]: string | number | boolean | ContentComponent };
 };
 
-type ContentComponent = Component | ImageComponent | RawPage | RawProduct | RawCollection;
+export type ContentComponent = BlockComponent | ImageComponent | RawPage | RawProduct | RawCollection;
 
 export function processContent(response: ContentResponse): ContentComponent[] {
   return response.map((block) => processBlock(block));
@@ -84,7 +85,8 @@ export function processBlock(
       return block as ContentComponent;
     }
     case 'Metaobject': {
-      const component: Component = {
+      const component: BlockComponent = {
+        id: block.id,
         contentType: block.type,
         fields: {},
       };
@@ -99,7 +101,7 @@ export function processBlock(
       return component;
     }
     default: {
-      return block as unknown as Component;
+      return block as unknown as BlockComponent;
     }
   }
 }

@@ -1,55 +1,48 @@
-import { Fragment } from 'react';
+import { Fragment, ReactElement } from 'react';
 import { Page, Hero, Display, Heading, CategoryCard, ProductSlider } from '~/components';
-import type { RenderContentProps } from '~/components';
+import { BlockComponent, ContentComponent, GeneralContentBlock } from '~/hooks';
 
-export function RenderContent({ content, ...attributes }: RenderContentProps): JSX.Element {
+type UnknownBlockProps = {
+  contentBlock: BlockComponent;
+};
+
+export const UnknownBlock = ({ contentBlock }: UnknownBlockProps) => {
   return (
-    <div {...attributes}>
-      {content.map(({ fields }, index) => (
-        <Fragment key={`${fields.component}-${index}`}>
-          {(() => {
-            switch (fields.component) {
-              case 'Hero': {
-                return (
-                  <Hero
-                    image={fields.image}
-                    subtitle={fields.subtitle}
-                    title={fields.title}
-                    description={fields.description}
-                    primaryButtonLink={fields.primaryButtonLink}
-                    primaryButtonText={fields.primaryButtonText}
-                    secondaryButtonLink={fields.secondaryButtonLink}
-                    secondaryButtonText={fields.secondaryButtonText}
-                  />
-                );
-              }
-              case 'Heading': {
-                return <Heading title={fields.title} tag={fields.tag} className={fields.className} />;
-              }
-              case 'Card': {
-                return <CategoryCard items={fields.items} />;
-              }
-              case 'Display': {
-                return <Display items={fields.items} />;
-              }
-              case 'ProductSlider': {
-                return (
-                  <ProductSlider
-                    collection="hidden-homepage"
-                    className="max-w-screen-3xl mx-auto px-4 md:px-10 mb-20"
-                  />
-                );
-              }
-              case 'Page': {
-                return <Page />;
-              }
-              default: {
-                return <p>component {fields.component} is not registered</p>;
-              }
-            }
-          })()}
-        </Fragment>
-      ))}
+    <div>
+      <h3>Unknown Content Block</h3>
+      <p>Type: {contentBlock.contentType}</p>
+      <p>ID: {contentBlock.id}</p>
+      {/* <pre>{JSON.stringify(contentBlock.fields, null, 2)}</pre> */}
+      <hr />
+    </div>
+  );
+};
+
+const contentMap = {
+  // display: Display,
+  // collection_card: CategoryCard,
+  // hero: Hero,
+  // richtext_block: () => 'Rich Text',
+  // product_slider: ProductSlider,
+  unknown: UnknownBlock,
+};
+
+type ContentMapKey = keyof typeof contentMap;
+
+const getBlockComponent = (contentBlock: BlockComponent) => {
+  const Component = contentMap[contentBlock.contentType as ContentMapKey];
+  return Component || contentMap.unknown;
+};
+
+type RenderContentProps = {
+  contentBlock: BlockComponent;
+};
+
+export function RenderContent({ contentBlock, ...attributes }: RenderContentProps) {
+  const BlockComponent = getBlockComponent(contentBlock);
+  return (
+    <div>
+      <BlockComponent {...contentBlock.fields} contentBlock={contentBlock} />
     </div>
   );
 }

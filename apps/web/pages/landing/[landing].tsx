@@ -2,8 +2,8 @@ import { Fragment, ReactElement } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { RenderContent } from '~/components';
-import { fetchPage, fetchAllPages, processContent } from '~/hooks';
-import { PageData, ContentReferences, Metaobject } from '~/hooks/useContent/types';
+import { fetchPage, fetchAllPages, processContent, ContentComponent } from '~/hooks';
+import { PageData, ContentReferences, Metaobject, ContentResponse } from '~/hooks/useContent/types';
 import { DefaultLayout } from '~/layouts';
 
 function flattenEdges({ edges }: ContentReferences): Metaobject[] {
@@ -27,16 +27,19 @@ export const getStaticPaths: GetStaticPaths = async (): Promise<{
 export const getStaticProps: GetStaticProps = async ({
   params,
   locale,
-}): Promise<{ props: { pageData: PageData; content: Metaobject[] }; revalidate: number } | { notFound: true }> => {
+}): Promise<
+  { props: { pageData: PageData; content: ContentComponent[] }; revalidate: number } | { notFound: true }
+> => {
   const slug = params?.landing;
   if (!slug) {
     return { notFound: true };
   }
 
   const pageData: PageData = await fetchPage(slug as string);
-  const rawContent: Metaobject[] = flattenEdges(pageData?.content.references);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const rawContent: ContentResponse = flattenEdges(pageData?.content.references);
   const content = processContent(rawContent);
-  // console.log("🚀 ~ file: [landing].tsx:39 ~ content:", content)
 
   if (!pageData) {
     return { notFound: true };
@@ -47,7 +50,6 @@ export const getStaticProps: GetStaticProps = async ({
       ...(await serverSideTranslations(locale as string, ['common', 'footer'])),
       pageData,
       content,
-      rawContent,
     },
     revalidate: 60,
   };
@@ -55,23 +57,17 @@ export const getStaticProps: GetStaticProps = async ({
 
 type LandingPageProps = {
   pageData: PageData;
-  content: Metaobject[];
+  content: ContentComponent[];
 };
 
-const LandingPage: NextPage<{ pageData: PageData; content: Metaobject[]; rawContent: any[] }> = ({
-  pageData,
-  content,
-  rawContent,
-}: LandingPageProps): ReactElement => {
-  console.log('🚀 ~ file: [landing].tsx:76 ~ content:', content);
-  console.log('🚀 ~ file: [landing].tsx:80 ~ rawContent:', rawContent);
+const LandingPage = ({ pageData, content }: LandingPageProps): ReactElement => {
   return (
     <DefaultLayout seo={pageData.seo}>
-      {content && false && (
+      {content && (
         <div className="cms-content">
-          {content.map(({ fields }, index) => (
-            <Fragment key={`${fields.component}-${index}`}>
-              <RenderContent content={fields.content} />
+          {content.map((contentBlock) => (
+            <Fragment key={contentBlock.id}>
+              <RenderContent contentBlock={contentBlock} />
             </Fragment>
           ))}
         </div>
