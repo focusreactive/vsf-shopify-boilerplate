@@ -39,6 +39,7 @@ query GetPage($slug: String!) {
                   ... on Metaobject {
                     id
                     handle
+                    type
                     fields {
                       key
                       type

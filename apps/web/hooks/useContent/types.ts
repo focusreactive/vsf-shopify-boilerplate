@@ -83,3 +83,60 @@ export type MediaImageReference = {
     id: string;
   };
 };
+
+export type RawImage = {
+  __typename: 'MediaImage';
+  id: string;
+  alt: string;
+  image: {
+    url: string;
+    altText: string | null;
+    width: number;
+    height: number;
+    id: string;
+  };
+};
+
+export type RawPage = {
+  __typename: 'Page';
+  id: string;
+  title: string;
+  slug: string;
+};
+
+export type RawProduct = {
+  __typename: 'Product';
+  id: string;
+  title: string;
+  slug: string;
+};
+
+export type RawCollection = {
+  __typename: 'Collection';
+  id: string;
+  title: string;
+  slug: string;
+};
+
+export type GeneralContentField = {
+  type: string;
+  key: string;
+  value: string;
+  reference?: GeneralComponent | RawImage | RawPage | RawProduct | RawCollection;
+};
+
+export type GeneralComponent = {
+  __typename: string;
+  id: string;
+  type: string;
+  fields: GeneralContentField[];
+};
+
+export type GeneralContentBlock = {
+  __typename: 'Metaobject';
+  id: string;
+  type: string;
+  fields: GeneralContentField[];
+};
+
+export type ContentResponse = GeneralContentBlock[];

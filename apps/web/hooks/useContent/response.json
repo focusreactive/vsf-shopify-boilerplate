@@ -1,0 +1,409 @@
+[
+  {
+    "__typename": "Metaobject",
+    "id": "gid://shopify/Metaobject/28210495768",
+    "type": "display",
+    "fields": [
+      {
+        "type": "metaobject_reference",
+        "key": "card_1",
+        "value": "gid://shopify/Metaobject/28210233624",
+        "reference": {
+          "__typename": "Metaobject",
+          "id": "gid://shopify/Metaobject/28210233624",
+          "handle": "summit-adventures",
+          "fields": [
+            {
+              "key": "card_color",
+              "type": "color",
+              "value": "#cae9f4",
+              "reference": null
+            },
+            {
+              "key": "cta_text",
+              "type": "single_line_text_field",
+              "value": "Discover More",
+              "reference": null
+            },
+            {
+              "key": "description",
+              "type": "rich_text_field",
+              "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Explore our latest range of high-performance snowboards, designed for the thrill-seekers.\"}]}]}",
+              "reference": null
+            },
+            {
+              "key": "image",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/36458269212952",
+              "reference": {
+                "__typename": "MediaImage",
+                "id": "gid://shopify/MediaImage/36458269212952",
+                "alt": "",
+                "image": {
+                  "url": "https://cdn.shopify.com/s/files/1/0819/1279/1320/files/DALL_E_2023-12-24_00.23.59_-_A_majestic_snowy_mountain_range_under_a_clear_blue_sky_with_sharp_peaks_covered_in_pristine_snow._The_scene_is_ideal_for_snowboarding_showcasing_the.png?v=1703352282",
+                  "altText": null,
+                  "width": 1024,
+                  "height": 1024,
+                  "id": "gid://shopify/ImageSource/36468219937048"
+                }
+              }
+            },
+            {
+              "key": "page",
+              "type": "page_reference",
+              "value": "gid://shopify/OnlineStorePage/126943297816",
+              "reference": {
+                "__typename": "Page",
+                "id": "gid://shopify/Page/126943297816",
+                "title": "Contact Us",
+                "slug": "contact-us"
+              }
+            },
+            {
+              "key": "reverse",
+              "type": "boolean",
+              "value": "false",
+              "reference": null
+            },
+            {
+              "key": "subtitle",
+              "type": "single_line_text_field",
+              "value": "Reach New Heights",
+              "reference": null
+            },
+            {
+              "key": "title",
+              "type": "single_line_text_field",
+              "value": "Summit Adventures",
+              "reference": null
+            }
+          ]
+        }
+      },
+      {
+        "type": "metaobject_reference",
+        "key": "card_2",
+        "value": "gid://shopify/Metaobject/28210397464",
+        "reference": {
+          "__typename": "Metaobject",
+          "id": "gid://shopify/Metaobject/28210397464",
+          "handle": "trick-master-series",
+          "fields": [
+            {
+              "key": "card_color",
+              "type": "color",
+              "value": "#afffe9",
+              "reference": null
+            },
+            {
+              "key": "cta_text",
+              "type": "single_line_text_field",
+              "value": "View Collection",
+              "reference": null
+            },
+            {
+              "key": "description",
+              "type": "rich_text_field",
+              "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Conquer the slopes with our trick-oriented boards, perfect for both beginners and pros.\"}]}]}",
+              "reference": null
+            },
+            {
+              "key": "image",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/36458269376792",
+              "reference": {
+                "__typename": "MediaImage",
+                "id": "gid://shopify/MediaImage/36458269376792",
+                "alt": "",
+                "image": {
+                  "url": "https://cdn.shopify.com/s/files/1/0819/1279/1320/files/DALL_E_2023-12-24_00.24.06_-_An_image_of_a_snowboarder_mid-air_performing_an_impressive_trick_against_a_snowy_mountain_landscape_backdrop._The_snowboarder_is_captured_in_dynamic_m.png?v=1703352283",
+                  "altText": null,
+                  "width": 1024,
+                  "height": 1024,
+                  "id": "gid://shopify/ImageSource/36468220100888"
+                }
+              }
+            },
+            {
+              "key": "page",
+              "type": "page_reference",
+              "value": "gid://shopify/OnlineStorePage/126943297816",
+              "reference": {
+                "__typename": "Page",
+                "id": "gid://shopify/Page/126943297816",
+                "title": "Contact Us",
+                "slug": "contact-us"
+              }
+            },
+            {
+              "key": "reverse",
+              "type": "boolean",
+              "value": "false",
+              "reference": null
+            },
+            {
+              "key": "subtitle",
+              "type": "single_line_text_field",
+              "value": "Unleash Your Skills",
+              "reference": null
+            },
+            {
+              "key": "title",
+              "type": "single_line_text_field",
+              "value": "Trick Master Series",
+              "reference": null
+            }
+          ]
+        }
+      },
+      {
+        "type": "metaobject_reference",
+        "key": "card_3",
+        "value": "gid://shopify/Metaobject/28210430232",
+        "reference": {
+          "__typename": "Metaobject",
+          "id": "gid://shopify/Metaobject/28210430232",
+          "handle": "winter-comfort",
+          "fields": [
+            {
+              "key": "card_color",
+              "type": "color",
+              "value": "#fabdff",
+              "reference": null
+            },
+            {
+              "key": "cta_text",
+              "type": "single_line_text_field",
+              "value": "Shop Apparel",
+              "reference": null
+            },
+            {
+              "key": "description",
+              "type": "rich_text_field",
+              "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Check out our exclusive winter apparel, combining comfort with cutting-edge style\"}]}]}",
+              "reference": null
+            },
+            {
+              "key": "image",
+              "type": "file_reference",
+              "value": "gid://shopify/MediaImage/36458269344024",
+              "reference": {
+                "__typename": "MediaImage",
+                "id": "gid://shopify/MediaImage/36458269344024",
+                "alt": "",
+                "image": {
+                  "url": "https://cdn.shopify.com/s/files/1/0819/1279/1320/files/DALL_E_2023-12-24_00.24.10_-_An_illustration_of_a_cozy_inviting_mountainside_chalet_surrounded_by_snow-covered_trees_set_in_a_serene_winter_evening_atmosphere._The_chalet_exudes.png?v=1703352283",
+                  "altText": null,
+                  "width": 1024,
+                  "height": 1024,
+                  "id": "gid://shopify/ImageSource/36468220068120"
+                }
+              }
+            },
+            {
+              "key": "page",
+              "type": "page_reference",
+              "value": "gid://shopify/OnlineStorePage/126943297816",
+              "reference": {
+                "__typename": "Page",
+                "id": "gid://shopify/Page/126943297816",
+                "title": "Contact Us",
+                "slug": "contact-us"
+              }
+            },
+            {
+              "key": "reverse",
+              "type": "boolean",
+              "value": "false",
+              "reference": null
+            },
+            {
+              "key": "subtitle",
+              "type": "single_line_text_field",
+              "value": "Style & Warmth",
+              "reference": null
+            },
+            {
+              "key": "title",
+              "type": "single_line_text_field",
+              "value": "Winter Comfort",
+              "reference": null
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "__typename": "Metaobject",
+    "id": "gid://shopify/Metaobject/28210004248",
+    "type": "collection_card",
+    "fields": [
+      {
+        "type": "collection_reference",
+        "key": "collection_1",
+        "value": "gid://shopify/Collection/459157668120",
+        "reference": {
+          "__typename": "Collection",
+          "id": "gid://shopify/Collection/459157668120",
+          "title": "Oxygen",
+          "slug": "oxygen"
+        }
+      },
+      {
+        "type": "collection_reference",
+        "key": "collection_2",
+        "value": "gid://shopify/Collection/458402726168",
+        "reference": {
+          "__typename": "Collection",
+          "id": "gid://shopify/Collection/458402726168",
+          "title": "Hydrogen",
+          "slug": "hydrogen"
+        }
+      },
+      {
+        "type": "collection_reference",
+        "key": "collection_3",
+        "value": "gid://shopify/Collection/459220877592",
+        "reference": {
+          "__typename": "Collection",
+          "id": "gid://shopify/Collection/459220877592",
+          "title": "Featured Items",
+          "slug": "hidden-homepage-featured-items"
+        }
+      },
+      {
+        "type": "single_line_text_field",
+        "key": "title",
+        "value": "Explore Our Signature Collections",
+        "reference": null
+      }
+    ]
+  },
+  {
+    "__typename": "Metaobject",
+    "id": "gid://shopify/Metaobject/28209479960",
+    "type": "hero",
+    "fields": [
+      {
+        "type": "rich_text_field",
+        "key": "description",
+        "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Embark on an exhilarating journey with our exclusive snowboard collection. Designed for the bold and the adventurous, each board promises unmatched performance and style. Conquer the slopes and experience the thrill of the mountains like never before\"}]}]}",
+        "reference": null
+      },
+      {
+        "type": "product_reference",
+        "key": "primary_button_link",
+        "value": "gid://shopify/Product/8610554806552",
+        "reference": {
+          "__typename": "Product",
+          "id": "gid://shopify/Product/8610554806552",
+          "title": "The Complete Snowboard",
+          "slug": "the-complete-snowboard"
+        }
+      },
+      {
+        "type": "single_line_text_field",
+        "key": "primary_button_text",
+        "value": "Order Now",
+        "reference": null
+      },
+      {
+        "type": "collection_reference",
+        "key": "secondary_button_link",
+        "value": "gid://shopify/Collection/458402693400",
+        "reference": {
+          "__typename": "Collection",
+          "id": "gid://shopify/Collection/458402693400",
+          "title": "Automated Collection",
+          "slug": "automated-collection"
+        }
+      },
+      {
+        "type": "single_line_text_field",
+        "key": "secondary_button_text",
+        "value": "Explore Our Boards",
+        "reference": null
+      },
+      {
+        "type": "single_line_text_field",
+        "key": "subtitle",
+        "value": "Ride the Peak",
+        "reference": null
+      },
+      {
+        "type": "single_line_text_field",
+        "key": "title",
+        "value": "Unleash the Mountain Spirit",
+        "reference": null
+      }
+    ]
+  },
+  {
+    "__typename": "Metaobject",
+    "id": "gid://shopify/Metaobject/28208759064",
+    "type": "richtext_block",
+    "fields": [
+      {
+        "type": "rich_text_field",
+        "key": "description",
+        "value": "{\"type\":\"root\",\"children\":[{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Oxygen Collection: Glide with Grace\",\"bold\":true},{\"type\":\"text\",\"value\":\"\\nElevate your mountain experience with our Oxygen Collection, a premium line of snowboards designed for those who seek harmony between agility and power. Each board in this collection is a masterpiece of craftsmanship, embodying the spirit of the high alps. The Oxygen range features ultra-lightweight cores, combined with a dynamic flex pattern, to offer unparalleled control and responsiveness. The boards' sleek design, inspired by the crisp air of mountain peaks, promises a smooth glide over fresh powder or groomed trails alike. Whether carving sharp turns or cruising down serene slopes, the Oxygen Collection ensures a ride that's as exhilarating as it is effortless.\"}]},{\"type\":\"paragraph\",\"children\":[{\"type\":\"text\",\"value\":\"Hydrogen Collection: Unleash the Power\",\"bold\":true},{\"type\":\"text\",\"value\":\"\\nDiscover the raw energy of the slopes with our Hydrogen Collection, a series of snowboards that redefine the boundaries of speed and strength. This collection is for the bold, the adventurers who chase the thrill of the descent. The Hydrogen snowboards boast a robust construction with reinforced edges, tailored for high-impact performance. Their innovative shape allows for aggressive carving and swift navigation through challenging terrains. As you traverse icy paths or tackle steep drops, the Hydrogen Collection provides stability and confidence, leaving a trail of adrenaline in your wake. Embrace the power, and make your mark on the mountains with Hydrogen.\"}]}]}",
+        "reference": null
+      },
+      {
+        "type": "single_line_text_field",
+        "key": "title",
+        "value": "Explore our collections",
+        "reference": null
+      }
+    ]
+  },
+  {
+    "__typename": "Metaobject",
+    "id": "gid://shopify/Metaobject/28208693528",
+    "type": "product_slider",
+    "fields": [
+      {
+        "type": "collection_reference",
+        "key": "collection",
+        "value": "gid://shopify/Collection/459157668120",
+        "reference": {
+          "__typename": "Collection",
+          "id": "gid://shopify/Collection/459157668120",
+          "title": "Oxygen",
+          "slug": "oxygen"
+        }
+      },
+      {
+        "type": "single_line_text_field",
+        "key": "title",
+        "value": "Oxygen",
+        "reference": null
+      }
+    ]
+  },
+  {
+    "__typename": "Metaobject",
+    "id": "gid://shopify/Metaobject/28208726296",
+    "type": "product_slider",
+    "fields": [
+      {
+        "type": "collection_reference",
+        "key": "collection",
+        "value": "gid://shopify/Collection/458402726168",
+        "reference": {
+          "__typename": "Collection",
+          "id": "gid://shopify/Collection/458402726168",
+          "title": "Hydrogen",
+          "slug": "hydrogen"
+        }
+      },
+      {
+        "type": "single_line_text_field",
+        "key": "title",
+        "value": "Hydrogen",
+        "reference": null
+      }
+    ]
+  }
+]

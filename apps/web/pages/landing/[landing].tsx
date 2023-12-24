@@ -2,7 +2,7 @@ import { Fragment, ReactElement } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { RenderContent } from '~/components';
-import { fetchPage, fetchAllPages } from '~/hooks';
+import { fetchPage, fetchAllPages, processContent } from '~/hooks';
 import { PageData, ContentReferences, Metaobject } from '~/hooks/useContent/types';
 import { DefaultLayout } from '~/layouts';
 
@@ -34,7 +34,9 @@ export const getStaticProps: GetStaticProps = async ({
   }
 
   const pageData: PageData = await fetchPage(slug as string);
-  const content: Metaobject[] = flattenEdges(pageData?.content.references);
+  const rawContent: Metaobject[] = flattenEdges(pageData?.content.references);
+  const content = processContent(rawContent);
+  // console.log("🚀 ~ file: [landing].tsx:39 ~ content:", content)
 
   if (!pageData) {
     return { notFound: true };
@@ -45,6 +47,7 @@ export const getStaticProps: GetStaticProps = async ({
       ...(await serverSideTranslations(locale as string, ['common', 'footer'])),
       pageData,
       content,
+      rawContent,
     },
     revalidate: 60,
   };
@@ -55,10 +58,13 @@ type LandingPageProps = {
   content: Metaobject[];
 };
 
-const LandingPage: NextPage<{ pageData: PageData; content: Metaobject[] }> = ({
+const LandingPage: NextPage<{ pageData: PageData; content: Metaobject[]; rawContent: any[] }> = ({
   pageData,
   content,
+  rawContent,
 }: LandingPageProps): ReactElement => {
+  console.log('🚀 ~ file: [landing].tsx:76 ~ content:', content);
+  console.log('🚀 ~ file: [landing].tsx:80 ~ rawContent:', rawContent);
   return (
     <DefaultLayout seo={pageData.seo}>
       {content && false && (
