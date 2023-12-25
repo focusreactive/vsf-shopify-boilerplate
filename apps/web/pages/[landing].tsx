@@ -1,5 +1,5 @@
 import { Fragment, ReactElement } from 'react';
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import { GetStaticPaths, GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { RenderContent } from '~/components';
 import { fetchPage, fetchAllPages, processContent, ContentComponent } from '~/hooks';

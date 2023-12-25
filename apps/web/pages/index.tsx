@@ -1,47 +1,65 @@
-import { Fragment } from 'react';
-import { GetServerSidePropsContext } from 'next';
-import { dehydrate } from '@tanstack/react-query';
+import { Fragment, ReactElement } from 'react';
+import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { RenderContent } from '~/components';
-import { useContent, prefetchContent, ContentDynamicPage } from '~/hooks';
+import { fetchPage, processContent, ContentComponent } from '~/hooks';
+import { PageData, ContentReferences, Metaobject, ContentResponse } from '~/hooks/useContent/types';
 import { DefaultLayout } from '~/layouts';
 
-const contentUrl = 'home-page';
+function flattenEdges({ edges }: ContentReferences): Metaobject[] {
+  if (!edges || !Array.isArray(edges)) {
+    return [];
+  }
 
-export async function getServerSideProps({ res, locale }: GetServerSidePropsContext) {
-  res.setHeader('Cache-Control', 'no-cache');
+  return edges.map((edge) => edge.node);
+}
 
-  const queryClient = await prefetchContent(contentUrl);
-  const data = queryClient.getQueryData(['content', contentUrl]);
+export const getStaticProps: GetStaticProps = async ({
+  locale,
+}): Promise<
+  { props: { pageData: PageData; content: ContentComponent[] }; revalidate: number } | { notFound: true }
+> => {
+  const slug = 'home-page';
 
-  if (!data) {
-    return {
-      notFound: true,
-    };
+  const pageData: PageData = await fetchPage(slug as string);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const rawContent: ContentResponse = flattenEdges(pageData?.content.references);
+  const content = processContent(rawContent);
+
+  if (!pageData) {
+    return { notFound: true };
   }
 
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
       ...(await serverSideTranslations(locale as string, ['common', 'footer'])),
+      pageData,
+      content,
     },
+    revalidate: 60,
   };
-}
+};
 
-export default function Home() {
-  const { data: content } = useContent<ContentDynamicPage>(contentUrl);
+type LandingPageProps = {
+  pageData: PageData;
+  content: ContentComponent[];
+};
 
+const LandingPage = ({ pageData, content }: LandingPageProps): ReactElement => {
   return (
-    <DefaultLayout>
+    <DefaultLayout seo={pageData.seo}>
       {content && (
         <div className="cms-content">
-          {content.map(({ fields }, index) => (
-            <Fragment key={`${fields.component}-${index}`}>
-              <RenderContent content={fields.content} />
+          {content.map((contentBlock) => (
+            <Fragment key={contentBlock.id}>
+              <RenderContent contentBlock={contentBlock} />
             </Fragment>
           ))}
         </div>
       )}
     </DefaultLayout>
   );
-}
+};
+
+export default LandingPage;

@@ -12,6 +12,22 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#257DE4',
+          50: '#C8DEF8',
+          100: '#B6D4F6',
+          200: '#92BEF1',
+          300: '#6EA8ED',
+          400: '#4993E8',
+          500: '#257DE4',
+          600: '#1762BA',
+          700: '#114888',
+          800: '#0B2D56',
+          900: '#041324',
+          950: '#01060B',
+        },
+      },
       gridTemplateAreas: {
         'product-page': ['left-top right', 'left-bottom right'],
       },
