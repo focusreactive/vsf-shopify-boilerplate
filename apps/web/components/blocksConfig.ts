@@ -5,7 +5,7 @@ import { RichTextBlock } from './RichText';
 const contentMap = {
   display: () => DisplayBlock,
   collection_card: () => CategoryCardBlock,
-  // hero: () => HeroBlock,
+  hero: () => HeroBlock,
   // richtext_block: () => RichTextBlock,
   // product_slider: () => ProductSliderBlock,
 };
