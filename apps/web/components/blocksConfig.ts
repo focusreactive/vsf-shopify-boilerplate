@@ -6,7 +6,7 @@ const contentMap = {
   display: () => DisplayBlock,
   collection_card: () => CategoryCardBlock,
   hero: () => HeroBlock,
-  // richtext_block: () => RichTextBlock,
+  richtext_block: () => RichTextBlock,
   product_slider: () => ProductSliderBlock,
 };
 
