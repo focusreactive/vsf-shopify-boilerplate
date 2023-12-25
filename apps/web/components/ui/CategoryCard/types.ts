@@ -5,5 +5,6 @@ interface CategoryWithImage extends SfCategory {
 }
 
 export type CategoryCardProps = {
+  title: string;
   items: CategoryWithImage[];
 };

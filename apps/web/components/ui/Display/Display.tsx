@@ -2,64 +2,75 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { SfButton } from '@storefront-ui/react';
 import classNames from 'classnames';
-import type { DisplayProps } from '~/components';
+import { Heading, type DisplayProps } from '~/components';
 import withShopify, { ShopifyBlock } from '~/sdk/shopify/withShopify';
 
-export function Display({ items, ...attributes }: DisplayProps) {
+export function Display({ items, title, ...attributes }: DisplayProps) {
   return (
-    <div
-      className="flex flex-col md:flex-row flex-wrap gap-6 max-w-screen-3xl mx-auto px-4 md:px-10 mb-10"
-      data-testid="display"
-      {...attributes}
-    >
-      {items.map(
-        ({
-          image,
-          title,
-          subtitle,
-          description,
-          buttonText,
-          buttonLink,
-          reverse,
-          titleClass,
-          subtitleClass,
-          cardColor,
-        }) => (
-          <div
-            key={title}
-            style={{ backgroundColor: cardColor }}
-            className="relative flex md:max-w-screen-3xl md:[&:not(:first-of-type)]:flex-1 md:first-of-type:w-full first:bg-secondary-200 last:bg-warning-200 even:bg-negative-200"
-          >
+    <>
+      <Heading
+        title={title}
+        tag={'h2'}
+        className="text-center mb-6 font-bold typography-headline-3 md:typography-headline-2"
+      />
+
+      <div
+        className="flex flex-col md:flex-row flex-wrap gap-6 max-w-screen-3xl mx-auto px-4 md:px-10 mb-10"
+        data-testid="display"
+        {...attributes}
+      >
+        {items.map(
+          ({
+            image,
+            title,
+            subtitle,
+            description,
+            buttonText,
+            buttonLink,
+            reverse,
+            titleClass,
+            subtitleClass,
+            cardColor,
+          }) => (
             <div
-              className={classNames('flex overflow-hidden grow flex-col', {
-                'flex-col-reverse': reverse,
-                'md:flex-row-reverse': reverse,
-              })}
+              key={title}
+              style={{ backgroundColor: cardColor }}
+              className="relative flex md:max-w-screen-3xl md:[&:not(:first-of-type)]:flex-1 md:first-of-type:w-full first:bg-secondary-200 last:bg-warning-200 even:bg-negative-200"
             >
-              <div className="flex flex-1 flex-col justify-center items-center md:items-start p-6 lg:p-10 max-w-1/2">
-                <p
-                  className={classNames('uppercase typography-text-xs block font-bold tracking-widest', subtitleClass)}
-                >
-                  {subtitle}
-                </p>
-                <h2 className={classNames('mb-4 mt-2 font-bold typography-headline-3', titleClass)}>{title}</h2>
-                <p className="typography-text-base block text-center md:text-left mb-4">{description}</p>
-                <SfButton className="!bg-black" as={Link} href={buttonLink}>
-                  {buttonText}
-                </SfButton>
+              <div
+                className={classNames('flex overflow-hidden grow flex-col', {
+                  'flex-col-reverse': reverse,
+                  'md:flex-row-reverse': reverse,
+                })}
+              >
+                <div className="flex flex-1 flex-col justify-center items-center md:items-start p-6 lg:p-10 max-w-1/2">
+                  <p
+                    className={classNames(
+                      'uppercase typography-text-xs block font-bold tracking-widest',
+                      subtitleClass,
+                    )}
+                  >
+                    {subtitle}
+                  </p>
+                  <h2 className={classNames('mb-4 mt-2 font-bold typography-headline-3', titleClass)}>{title}</h2>
+                  <p className="typography-text-base block text-center md:text-left mb-4">{description}</p>
+                  <SfButton className="!bg-black" as={Link} href={buttonLink}>
+                    {buttonText}
+                  </SfButton>
+                </div>
+                <Image
+                  src={image}
+                  alt={title}
+                  className="w-full md:w-1/2 self-end object-contain flex-1"
+                  height={300}
+                  width={300}
+                />
               </div>
-              <Image
-                src={image}
-                alt={title}
-                className="w-full md:w-1/2 self-end object-contain flex-1"
-                height={300}
-                width={300}
-              />
             </div>
-          </div>
-        ),
-      )}
-    </div>
+          ),
+        )}
+      </div>
+    </>
   );
 }
 
@@ -98,6 +109,7 @@ type CardItem = {
 };
 
 type DisplayBlockFieldsType = {
+  title: string;
   card_1: CardItem;
   card_2: CardItem;
   card_3: CardItem;
@@ -106,7 +118,7 @@ type DisplayBlockFieldsType = {
 const processLink = (page: PageLink | { __typename: string; slug: string }) => {
   switch (page.__typename) {
     case 'Page': {
-      return `landing/${page.slug}`;
+      return `/${page.slug}`;
     }
     case 'Collection': {
       return `collection/${page.slug}`;
@@ -154,10 +166,10 @@ const processCard = (cardItem: CardItem) => {
 
 const wrapper = (contentBlock: ShopifyBlock<DisplayBlockFieldsType>): DisplayProps => {
   // Extracting card data from contentBlock.fields
-  const { card_1, card_2, card_3 } = contentBlock.fields;
+  const { card_1, card_2, card_3, title } = contentBlock.fields;
   const items = [card_1, card_2, card_3].map((cardItem) => processCard(cardItem));
 
-  return { items };
+  return { items, title };
 };
 
 export const DisplayBlock = withShopify({ wrapperFn: wrapper, isDebug: false })(Display);

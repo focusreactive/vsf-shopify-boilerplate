@@ -1,7 +1,6 @@
 import React from 'react';
 import { convertSchemaToHtml } from '@thebeyondgroup/shopify-rich-text-renderer';
-import { BlockComponent } from '~/hooks';
-import withShopify from '~/sdk/shopify/withShopify';
+import withShopify, { ShopifyBlock } from '~/sdk/shopify/withShopify';
 import { Heading } from '../Heading';
 
 type Props = {
@@ -12,7 +11,11 @@ type Props = {
 export const RichText = ({ title, htmlString }: Props) => {
   return (
     <>
-      <Heading title={title} tag={'h2'} className="max-w-screen-3xl mx-auto px-4 md:px-10 mb-20" />;
+      <Heading
+        title={title}
+        tag={'h2'}
+        className="text-center mb-6 font-bold typography-headline-3 md:typography-headline-2"
+      />
       <div
         className="max-w-screen-3xl mx-auto px-4 md:px-10 mb-20"
         dangerouslySetInnerHTML={{
@@ -23,7 +26,12 @@ export const RichText = ({ title, htmlString }: Props) => {
   );
 };
 
-const wrapperFn = (block) => {
+type RichTextFields = {
+  title: string;
+  description: string;
+};
+
+const wrapper = (block: ShopifyBlock<RichTextFields>) => {
   const { title, description } = block.fields;
   let htmlString = '';
   try {
@@ -36,4 +44,4 @@ const wrapperFn = (block) => {
     htmlString,
   };
 };
-export const RichTextBlock = withShopify({ wrapperFn, isDebug: false })(RichText);
+export const RichTextBlock = withShopify({ wrapperFn: wrapper, isDebug: false })(RichText);

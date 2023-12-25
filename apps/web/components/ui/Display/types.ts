@@ -1,4 +1,5 @@
 export type DisplayProps = {
+  title: string;
   items: {
     image: string;
     title: string;
