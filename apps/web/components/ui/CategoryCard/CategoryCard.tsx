@@ -48,12 +48,6 @@ type SpecificFieldsType = {
   title: string;
 };
 
-// interface CategoryWithImage {
-//   name: string;
-//   image: string;
-//   slug: string;
-// }
-
 const wrapper = (contentBlock: ShopifyBlock<SpecificFieldsType>): CategoryCardProps => {
   const { collection_1, collection_2, collection_3 } = contentBlock.fields;
 

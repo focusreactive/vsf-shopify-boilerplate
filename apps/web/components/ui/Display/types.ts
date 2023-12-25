@@ -5,8 +5,10 @@ export type DisplayProps = {
     subtitle: string;
     description: string;
     buttonText: string;
+    buttonLink: string;
     reverse: boolean;
     titleClass: string;
     subtitleClass: string;
+    cardColor: string;
   }[];
 };

@@ -3,7 +3,7 @@ import { BlockComponent } from '~/hooks';
 import { RichTextBlock } from './RichText';
 
 const contentMap = {
-  // display: () => DisplayBlock,
+  display: () => DisplayBlock,
   collection_card: () => CategoryCardBlock,
   // hero: () => HeroBlock,
   // richtext_block: () => RichTextBlock,
