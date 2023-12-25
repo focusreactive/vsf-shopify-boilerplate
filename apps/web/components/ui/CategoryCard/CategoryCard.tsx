@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CategoryCardProps } from '~/components';
+import withShopify, { ShopifyBlock } from '~/sdk/shopify/withShopify';
 
 export function CategoryCard({ items, ...attributes }: CategoryCardProps) {
   return (
@@ -30,3 +31,20 @@ export function CategoryCard({ items, ...attributes }: CategoryCardProps) {
     </div>
   );
 }
+
+// SpecificFieldsType would be your custom type for the fields in BlockComponent
+type SpecificFieldsType = {
+  // ... define the fields structure here
+};
+
+const wrapperFn = (contentBlock: ShopifyBlock<SpecificFieldsType>): CategoryCardProps => {
+  // Convert Shopify content to the format required by CategoryCard
+  // ...
+
+  return {
+    items: [{ id: 123 }],
+    // ... props for CategoryCard
+  };
+};
+
+export const CategoryCardBlock = withShopify<SpecificFieldsType>({ wrapperFn, isDebug: true })(CategoryCard);

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { SfButton } from '@storefront-ui/react';
 import classNames from 'classnames';
 import type { DisplayProps } from '~/components';
+import withShopify from '~/sdk/shopify/withShopify';
 
 export function Display({ items, ...attributes }: DisplayProps) {
   return (
@@ -45,3 +46,5 @@ export function Display({ items, ...attributes }: DisplayProps) {
     </div>
   );
 }
+
+export const DisplayBlock = withShopify({ wrapperFn: (v) => v, isDebug: true })(Display);

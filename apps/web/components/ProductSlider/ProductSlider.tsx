@@ -3,6 +3,7 @@ import { SfScrollable } from '@storefront-ui/react';
 import { ProductCard } from '~/components';
 import type { ProductSliderProps } from '~/components';
 import { useProducts } from '~/hooks';
+import withShopify from '~/sdk/shopify/withShopify';
 
 export function ProductSlider({ className, collection, ...attributes }: ProductSliderProps) {
   const { products } = useProducts(collection);
@@ -36,3 +37,5 @@ export function ProductSlider({ className, collection, ...attributes }: ProductS
     </SfScrollable>
   );
 }
+
+export const ProductSliderBlock = withShopify({ wrapperFn: (v) => v, isDebug: true })(ProductSlider);
