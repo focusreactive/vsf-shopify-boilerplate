@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Maybe } from '@vue-storefront/unified-data-model';
 import type { CategoryCardProps } from '~/components';
 import withShopify, { ShopifyBlock } from '~/sdk/shopify/withShopify';
 
@@ -32,19 +33,49 @@ export function CategoryCard({ items, ...attributes }: CategoryCardProps) {
   );
 }
 
-// SpecificFieldsType would be your custom type for the fields in BlockComponent
+type CollectionItem = {
+  __typename: 'Collection';
+  id: string;
+  title: string;
+  slug: string;
+  image: Maybe<{ url: string }>;
+};
+
 type SpecificFieldsType = {
-  // ... define the fields structure here
+  collection_1: CollectionItem;
+  collection_2: CollectionItem;
+  collection_3: CollectionItem;
+  title: string;
 };
 
-const wrapperFn = (contentBlock: ShopifyBlock<SpecificFieldsType>): CategoryCardProps => {
-  // Convert Shopify content to the format required by CategoryCard
-  // ...
+// interface CategoryWithImage {
+//   name: string;
+//   image: string;
+//   slug: string;
+// }
 
-  return {
-    items: [{ id: 123 }],
-    // ... props for CategoryCard
-  };
+const wrapper = (contentBlock: ShopifyBlock<SpecificFieldsType>): CategoryCardProps => {
+  const { collection_1, collection_2, collection_3 } = contentBlock.fields;
+
+  // Construct items array
+  const items: CategoryCardProps['items'] = [collection_1, collection_2, collection_3].map((collection) => {
+    if (!collection || collection.__typename !== 'Collection') {
+      throw new Error('Invalid collection item');
+    }
+
+    const image = collection.image?.url || '';
+
+    return {
+      id: collection.slug,
+      name: collection.title,
+      image,
+      slug: `/collection/${collection.slug}`,
+      subcategories: [],
+      productCount: null,
+    };
+  });
+
+  return { items };
 };
 
-export const CategoryCardBlock = withShopify<SpecificFieldsType>({ wrapperFn, isDebug: true })(CategoryCard);
+export const CategoryCardBlock = withShopify<SpecificFieldsType>({ wrapperFn: wrapper, isDebug: false })(CategoryCard);

@@ -30,6 +30,9 @@ query GetPage($slug: String!) {
                     id
                     title
                     slug: handle
+                    image {
+                      url
+                    }
                   }
                   ... on Product {
                     id
