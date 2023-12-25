@@ -7,7 +7,7 @@ const contentMap = {
   collection_card: () => CategoryCardBlock,
   hero: () => HeroBlock,
   // richtext_block: () => RichTextBlock,
-  // product_slider: () => ProductSliderBlock,
+  product_slider: () => ProductSliderBlock,
 };
 
 type ContentMapKey = keyof typeof contentMap;
