@@ -1,8 +1,7 @@
 import type { PropsWithChildren } from 'react';
 import Link from 'next/link';
-import { SfButton, SfIconArrowBack, SfLoaderCircular } from '@storefront-ui/react';
+import { SfButton, SfIconArrowBack } from '@storefront-ui/react';
 import { NarrowContainer, Footer, NavbarTop } from '~/components';
-import { useCart } from '~/hooks';
 
 interface CheckoutLayoutProps extends PropsWithChildren {
   heading: string;
@@ -11,8 +10,6 @@ interface CheckoutLayoutProps extends PropsWithChildren {
 }
 
 export function CheckoutLayout({ backLabel, backHref, children, heading }: CheckoutLayoutProps): JSX.Element {
-  const { cart, isLoading } = useCart();
-
   return (
     <>
       <NavbarTop />
@@ -41,13 +38,7 @@ export function CheckoutLayout({ backLabel, backHref, children, heading }: Check
                 {backLabel}
               </SfButton>
             </div>
-            {isLoading && !cart ? (
-              <span className="!flex justify-center my-40 h-24">
-                <SfLoaderCircular size="3xl" />
-              </span>
-            ) : (
-              children
-            )}
+            {children}
           </div>
         </NarrowContainer>
       </main>

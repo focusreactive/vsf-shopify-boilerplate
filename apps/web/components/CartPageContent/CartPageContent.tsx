@@ -1,10 +1,23 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { SfButton } from '@storefront-ui/react';
+import { SfButton, SfLoaderCircular } from '@storefront-ui/react';
 import { useTranslation } from 'next-i18next';
 import { OrderSummary, CartProductCard } from '~/components';
 import { useCart } from '~/hooks';
 import emptyCartImage from '~/public/images/empty-cart.svg';
+
+const Loading = () => (
+  <span className="!flex justify-center my-40 h-24">
+    <SfLoaderCircular size="3xl" />
+  </span>
+);
+
+const Empty = ({ message, alt }) => (
+  <div className="flex items-center justify-center flex-col pt-24 pb-32" data-testid="cart-page-content">
+    <Image src={emptyCartImage} alt={alt} />
+    <h2 className="mt-8">{message}</h2>
+  </div>
+);
 
 export function CartPageContent() {
   const { t } = useTranslation('cart');
@@ -23,6 +36,8 @@ export function CartPageContent() {
   const handleRemoveLine = (lineId: string) => () => {
     removeCartItem(lineId);
   };
+
+  const placeHolder = isLoading ? <Loading /> : <Empty message={t('emptyCart')} alt={t('emptyCartImgAlt')} />;
 
   return cart?.lines.length ? (
     <div className="md:grid md:grid-cols-12 md:gap-x-6" data-testid="cart-page-content">
@@ -54,9 +69,6 @@ export function CartPageContent() {
       </OrderSummary>
     </div>
   ) : (
-    <div className="flex items-center justify-center flex-col pt-24 pb-32" data-testid="cart-page-content">
-      <Image src={emptyCartImage} alt={t('emptyCartImgAlt')} />
-      <h2 className="mt-8">{t('emptyCart')}</h2>
-    </div>
+    <>{placeHolder}</>
   );
 }
