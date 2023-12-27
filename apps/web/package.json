@@ -18,6 +18,7 @@
     "@storefront-ui/react": "~2.2.0",
     "@storefront-ui/shared": "~2.2.0",
     "@tanstack/react-query": "^4.29.5",
+    "@thebeyondgroup/shopify-rich-text-renderer": "^1.0.0",
     "@vue-storefront/sdk": "~1.0.1",
     "@vue-storefront/storefront-boilerplate-sdk": "~0.1.0",
     "classnames": "^2.3.2",
@@ -50,12 +51,12 @@
     "@vue-storefront/unified-data-model": "~0.1.0",
     "autoprefixer": "^10.4.14",
     "eslint-config-next": "^13.3.0",
+    "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.2.2",
     "postcss": "^8.4.23",
     "sass": "^1.62.0",
-    "jest": "^29.5.0",
-    "ts-jest": "^29.0.3",
     "tailwindcss": "^3.3.1",
+    "ts-jest": "^29.0.3",
     "typescript": "5.0.4"
   }
 }

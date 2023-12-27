@@ -1,5 +1,21 @@
-import type { ContentDynamicPage } from '~/hooks';
+/* eslint-disable no-use-before-define */
+type Component = {
+  __typename: string;
+  id: string;
+  type: string;
+  fields: ContentField[];
+};
 
-export type RenderContentProps = {
-  content: ContentDynamicPage['content'];
+type ContentField = {
+  type: string;
+  key: string;
+  value: string;
+  reference?: Component | null;
+};
+
+type ContentBlock = {
+  __typename: string;
+  id: string;
+  type: string;
+  fields: ContentField[];
 };

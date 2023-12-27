@@ -25,7 +25,7 @@ function App({ Component, pageProps }: AppProps) {
       <Head>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         <meta name="description" content="VSF x Next.js (Boilerplate)" />
-        <title>Vue Storefront React Boilerplate</title>
+        <title>Vue Storefront Shopify Boilerplate</title>
       </Head>
       <Hydrate state={pageProps.dehydratedState}>
         <div className={classNames(fontHeadings.variable, fontBody.variable, 'font-body')}>

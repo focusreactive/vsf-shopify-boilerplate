@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import { SfButton, SfIconExpandMore, SfIconShoppingCart } from '@storefront-ui/react';
 import { useTranslation } from 'next-i18next';
@@ -19,6 +20,10 @@ import { Product } from '~/sdk/shopify/types';
 type LayoutPropsType = PropsWithChildren & {
   breadcrumbs?: Breadcrumb[];
   product?: Product;
+  seo?: {
+    title: string;
+    description?: string;
+  };
 };
 
 const CartButton = () => {
@@ -42,11 +47,17 @@ const CartButton = () => {
   );
 };
 
-export function DefaultLayout({ children, breadcrumbs = [], product }: LayoutPropsType): JSX.Element {
+export function DefaultLayout({ children, seo, breadcrumbs = [], product }: LayoutPropsType): JSX.Element {
   const { t } = useTranslation();
 
   return (
     <CartProvider product={product}>
+      {seo ? (
+        <Head>
+          <title>{seo?.title}</title>
+          {seo?.description ? <meta name="description" content={seo?.description} /> : null}
+        </Head>
+      ) : null}
       <NavbarTop filled>
         <SfButton
           className="!px-2 mr-auto text-white bg-transparent hover:bg-primary-800 hover:text-white active:bg-primary-900 active:text-white font-body hidden md:inline-flex"

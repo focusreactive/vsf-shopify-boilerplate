@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { SfButton } from '@storefront-ui/react';
 import type { HeroProps } from '~/components';
+import withShopify from '~/sdk/shopify/withShopify';
 
 export function Hero({
   image,
@@ -48,3 +49,5 @@ export function Hero({
     </div>
   );
 }
+
+export const HeroBlock = withShopify({ wrapperFn: (v) => v, isDebug: true })(Hero);

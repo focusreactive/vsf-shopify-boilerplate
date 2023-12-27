@@ -2044,6 +2044,11 @@
   resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.4.3.tgz#af975e367743fa91989cd666666aec31a8f50591"
   integrity sha512-kCUc5MEwaEMakkO5x7aoD+DLi02ehmEM2QCGWvNqAS1dV/fAvORWEjnjsEIvml59M7Y5kCkWN6fCCyPOe8OL6Q==
 
+"@thebeyondgroup/shopify-rich-text-renderer@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@thebeyondgroup/shopify-rich-text-renderer/-/shopify-rich-text-renderer-1.0.0.tgz#64d370d1f2ca2d71e36c842d9d4a278dd0324825"
+  integrity sha512-7NChTgzGB4LPf8Gk0RgtGdEr0yuSZ/wfCLHQ9UfIIcL7tcq+Q9joX4GL24RZGEOPNoYVcVtBq6NA77jckYg56g==
+
 "@tootallnate/once@2":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
