@@ -15,6 +15,7 @@ import {
 } from '~/components';
 import { useProduct, useProductRecommended, prefetchProduct, useProductBreadcrumbs } from '~/hooks';
 import { DefaultLayout } from '~/layouts';
+import { flattenArray } from '~/sdk/shopify/fattenArray';
 
 interface ProductPageQuery extends ParsedUrlQuery {
   slug: string;
@@ -60,7 +61,7 @@ export function ProductPage() {
     return null;
   }
 
-  const { gallery } = product;
+  const images = flattenArray(product.gallery);
 
   return (
     <DefaultLayout /* breadcrumbs={breadcrumbs} */>
@@ -70,22 +71,18 @@ export function ProductPage() {
       <NarrowContainer>
         <div className="md:grid gap-x-6 grid-areas-product-page grid-cols-product-page">
           <section className="grid-in-left-top md:h-full xl:max-h-[700px]">
-            <Gallery images={gallery} />
+            <Gallery images={images} />
           </section>
-          <section className="mb-10 grid-in-right md:mb-0">
-            <PurchaseCard product={product} />
-          </section>
+          <section className="mb-10 grid-in-right md:mb-0">{/* <PurchaseCard product={product} /> */}</section>
           <section className="grid-in-left-bottom md:mt-8">
             <Divider className="mb-6" />
-            <ProductProperties product={product} showColors={false} />
+            {/* <ProductProperties product={product} showColors={false} /> */}
             <Divider className="mt-4 mb-2 md:mt-8" />
-            <ProductAccordion product={product} />
+            {/* <ProductAccordion product={product} /> */}
           </section>
           <Divider className="mt-4 mb-2" />
         </div>
-        <section className="mx-4 mt-28 mb-20">
-          <RecommendedProducts products={recommendedProducts} />
-        </section>
+        <section className="mx-4 mt-28 mb-20">{/* <RecommendedProducts products={recommendedProducts} /> */}</section>
       </NarrowContainer>
     </DefaultLayout>
   );

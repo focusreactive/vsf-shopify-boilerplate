@@ -1,10 +1,9 @@
 import { QueryClient, useQuery } from '@tanstack/react-query';
-import { SfProduct } from '@vue-storefront/unified-data-model';
 import { sdk } from '~/sdk';
+import { Product } from '~/sdk/shopify/types';
 
-const fetchProduct = async (slug: string): Promise<SfProduct> => {
-  const data = await sdk.shopify.getProduct({ handle: slug });
-  return data;
+const fetchProduct = async (slug: string): Promise<Product> => {
+  return await sdk.shopify.getProduct({ slug });
 };
 
 export async function prefetchProduct(slug: string): Promise<QueryClient> {
