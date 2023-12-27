@@ -64,7 +64,7 @@ export function ProductCard({
             </SfLink>
           </div>
         ) : null}
-        <p className="block py-2 font-normal typography-text-xs text-neutral-700 text-justify flex-grow">
+        <p className="block py-2 font-normal typography-text-xs text-neutral-700 text-justify flex-grow max-h-24 overflow-hidden text-ellipsis">
           {description}
         </p>
         <span className="block pb-2 font-bold typography-text-sm" data-testid="product-card-vertical-price">

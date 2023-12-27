@@ -1,5 +1,5 @@
-import { SfProduct } from '@vue-storefront/unified-data-model';
+import { Product } from '~/sdk/shopify/types';
 
 export type PurchaseCardProps = {
-  product: SfProduct;
+  product: Product;
 };

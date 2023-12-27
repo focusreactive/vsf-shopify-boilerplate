@@ -23,7 +23,6 @@ const useProducts = () => {
 
   const getData = async () => {
     const resp = await sdk.shopify.getProducts({});
-    console.log('🚀 ~ file: ProductSlider.tsx:26 ~ getData ~ resp:', resp);
     setProducts(resp.products);
   };
 

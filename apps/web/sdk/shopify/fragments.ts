@@ -13,6 +13,9 @@ const variant = `#graphql
     amount
     currencyCode
   }
+  compareAtPrice {
+    amount
+  }
 }
 `;
 
@@ -61,7 +64,7 @@ const product = `#graphql
     name
     values
   }
-  variants(first: 10) {
+  variants(first: 50) {
     edges {
       node {
         ...variant

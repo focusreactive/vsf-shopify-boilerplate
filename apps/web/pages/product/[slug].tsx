@@ -64,7 +64,7 @@ export function ProductPage() {
   const images = flattenArray(product.gallery);
 
   return (
-    <DefaultLayout breadcrumbs={breadcrumbs}>
+    <DefaultLayout breadcrumbs={breadcrumbs} product={product}>
       <Head>
         <title>{`${product.title} | Vue Storefront Demo`}</title>
       </Head>

@@ -18,6 +18,15 @@ export type Variant = {
     amount: number;
     currencyCode: string;
   };
+  compareAtPrice?: {
+    amount: number;
+  };
+};
+
+export type Option = {
+  id: string;
+  name: string;
+  values: string[];
 };
 
 export type Product = {
@@ -49,10 +58,83 @@ export type Product = {
   };
   availableForSale: boolean;
   totalInventory: number;
-  options: {
-    id: string;
+  options: Option[];
+  variants: Variant[];
+};
+
+export type Merchandise = {
+  id: string;
+  title: string;
+  selectedOptions: {
     name: string;
-    values: string[];
+    value: string;
   }[];
-  variants: EdgeNode<Variant>;
+  image: {
+    url: string;
+    altText: string;
+  };
+  price: {
+    amount: number;
+    currencyCode: string;
+  };
+  unitPrice: {
+    amount: number;
+    currencyCode: string;
+  };
+  product: {
+    id: string;
+    title: string;
+    description: string;
+    slug: string;
+    primaryImage: {
+      id: string;
+      url: string;
+      width: number;
+      height: number;
+      altText: string;
+    };
+    gallery: EdgeNode<{
+      id: string;
+      alt: string;
+      url: string;
+    }>;
+    options: Option[];
+    productType: string;
+    priceRange: {
+      minVariantPrice: {
+        amount: string;
+        currencyCode: string;
+      };
+      maxVariantPrice: {
+        amount: string;
+        currencyCode: string;
+      };
+    };
+    availableForSale: boolean;
+    totalInventory: number;
+    variants: EdgeNode<Variant>;
+  };
+};
+
+export type CartLine = {
+  id: string;
+  merchandise: Merchandise;
+  quantity: number;
+};
+
+export type CartDetails = {
+  id: string;
+  checkoutUrl: string;
+  cost: {
+    subtotalAmount: {
+      amount: number;
+    };
+    totalTaxAmount: {
+      amount: number;
+    };
+    totalAmount: {
+      amount: number;
+    };
+  };
+  lines: CartLine[];
 };

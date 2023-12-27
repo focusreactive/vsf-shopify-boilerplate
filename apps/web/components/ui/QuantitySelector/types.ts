@@ -6,4 +6,5 @@ export interface QuantitySelectorProps extends PropsWithChildren {
   minValue?: number;
   maxValue?: number;
   className?: string;
+  disabled?: boolean;
 }

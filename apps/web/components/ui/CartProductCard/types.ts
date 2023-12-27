@@ -1,7 +1,6 @@
 import { Maybe } from '@vue-storefront/unified-data-model';
 
 export interface Attribute {
-  label: string;
   name: string;
   value: string;
 }
@@ -15,7 +14,11 @@ export type CartProductCardProps = {
   minValue: number;
   name?: Maybe<string>;
   price: number;
+  priceTotal: number;
   specialPrice: number;
   value: number;
   slug: string;
+  onChangeQuantity: (q: number) => void;
+  onRemoveLine: () => void;
+  isLoading: boolean;
 };

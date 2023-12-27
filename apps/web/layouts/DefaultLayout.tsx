@@ -13,19 +13,40 @@ import {
   NarrowContainer,
   Breadcrumbs,
 } from '~/components';
-import { useCart } from '~/hooks';
+import { CartProvider, useCartContext } from '~/hooks';
+import { Product } from '~/sdk/shopify/types';
 
 type LayoutPropsType = PropsWithChildren & {
   breadcrumbs?: Breadcrumb[];
+  product?: Product;
 };
 
-export function DefaultLayout({ children, breadcrumbs = [] }: LayoutPropsType): JSX.Element {
+const CartButton = () => {
+  const { totalItems } = useCartContext();
   const { t } = useTranslation();
-  const { data: cart } = useCart();
-  const cartLineItemsCount = cart?.lineItems.reduce((total, { quantity }) => total + quantity, 0) ?? 0;
 
   return (
-    <>
+    <SfButton
+      className="mr-2 -ml-0.5 text-white bg-primary-700 hover:bg-primary-800 hover:text-white active:bg-primary-900 active:text-white"
+      as={Link}
+      href="/cart"
+      aria-label={t('numberInCart', totalItems)}
+      variant="tertiary"
+      square
+      slotPrefix={
+        <Badge bordered value={totalItems.count} className="text-neutral-900 bg-white">
+          <SfIconShoppingCart />
+        </Badge>
+      }
+    />
+  );
+};
+
+export function DefaultLayout({ children, breadcrumbs = [], product }: LayoutPropsType): JSX.Element {
+  const { t } = useTranslation();
+
+  return (
+    <CartProvider product={product}>
       <NavbarTop filled>
         <SfButton
           className="!px-2 mr-auto text-white bg-transparent hover:bg-primary-800 hover:text-white active:bg-primary-900 active:text-white font-body hidden md:inline-flex"
@@ -38,19 +59,7 @@ export function DefaultLayout({ children, breadcrumbs = [] }: LayoutPropsType): 
         </SfButton>
         <Search className="hidden md:block flex-1" />
         <nav className="hidden md:flex md:flex-row md:flex-nowrap">
-          <SfButton
-            className="mr-2 -ml-0.5 text-white bg-primary-700 hover:bg-primary-800 hover:text-white active:bg-primary-900 active:text-white"
-            as={Link}
-            href="/cart"
-            aria-label={t('numberInCart', { count: cartLineItemsCount })}
-            variant="tertiary"
-            square
-            slotPrefix={
-              <Badge bordered value={cartLineItemsCount} className="text-neutral-900 bg-white">
-                <SfIconShoppingCart />
-              </Badge>
-            }
-          />
+          <CartButton />
         </nav>
       </NavbarTop>
       {breadcrumbs?.length > 0 && (
@@ -64,7 +73,7 @@ export function DefaultLayout({ children, breadcrumbs = [] }: LayoutPropsType): 
       <BottomNav />
       <ScrollToTopButton />
       <Footer className="mb-[58px] md:mb-0" />
-    </>
+    </CartProvider>
   );
 }
 

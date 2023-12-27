@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef } from 'react';
 import { useCounter } from 'react-use';
-import { SfButton, SfIconAdd, SfIconRemove } from '@storefront-ui/react';
+import { SfButton, SfIconAdd, SfIconRemove, SfIconDelete } from '@storefront-ui/react';
 import { clamp } from '@storefront-ui/shared';
 import { useTranslation } from 'next-i18next';
 import type { QuantitySelectorProps } from '~/components';
@@ -12,6 +12,7 @@ export function QuantitySelector({
   minValue = 1,
   maxValue = Number.POSITIVE_INFINITY,
   className,
+  disabled,
 }: QuantitySelectorProps) {
   const { t } = useTranslation();
   const inputId = useId();
@@ -38,7 +39,7 @@ export function QuantitySelector({
           variant="tertiary"
           square
           className="rounded-r-none"
-          disabled={internalValue <= minValue}
+          disabled={disabled || internalValue <= minValue}
           aria-controls={inputId}
           aria-label={t('quantitySelectorDecrease')}
           onClick={() => dec()}
@@ -63,7 +64,7 @@ export function QuantitySelector({
           variant="tertiary"
           square
           className="rounded-l-none"
-          disabled={internalValue >= maxValue}
+          disabled={disabled || internalValue >= maxValue}
           aria-controls={inputId}
           aria-label={t('quantitySelectorIncrease')}
           onClick={() => inc()}

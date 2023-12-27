@@ -17,36 +17,62 @@ import { clamp } from '@storefront-ui/shared';
 import { Trans, useTranslation } from 'next-i18next';
 import { QuantitySelector, Tag } from '~/components';
 import type { PurchaseCardProps } from '~/components';
+import { useCartContext } from '~/hooks';
+import { CartLine } from '~/sdk/shopify/types';
+
+function calcAddedProducts(productId: string, lines?: CartLine[]): number {
+  if (!lines || lines.length === 0) {
+    return 0;
+  }
+  return lines
+    .filter(({ merchandise: { product } }) => product.id === productId)
+    .map(({ quantity }) => quantity)
+    .reduce((s, x) => s + x, 0);
+}
 
 export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
   const { t } = useTranslation(['product', 'common']);
+  const { addSelectedVariantToCart, selectedVariantId, cart } = useCartContext();
   const minProductQuantity = 1;
   const maxProductQuantity = 999;
   const [productQuantity, { set }] = useCounter(minProductQuantity);
 
+  const selectedVariant = product.variants.find(({ id }) => id === selectedVariantId);
+
   function handleOnChange(nextValue: number) {
     set(clamp(nextValue, minProductQuantity, maxProductQuantity));
   }
+
+  function handleAddToCart() {
+    addSelectedVariantToCart(productQuantity);
+  }
+
+  const productsInCart = calcAddedProducts(product.id, cart?.lines);
+
   return (
     <div
       className="p-4 xl:p-6 md:border md:border-neutral-100 md:shadow-lg md:rounded-md md:sticky md:top-20"
       data-testid="purchase-card"
       {...attributes}
     >
-      <Tag variant="secondary" strong className="mb-4">
-        <SfIconSell size="sm" className="ml-1" />
-        <span className="mr-1">{t('sale')}</span>
-      </Tag>
+      {selectedVariant?.compareAtPrice ? (
+        <Tag variant="secondary" strong className="mb-4">
+          <SfIconSell size="sm" className="ml-1" />
+          <span className="mr-1">{t('sale')}</span>
+        </Tag>
+      ) : null}
       <h1 className="mb-1 font-bold typography-headline-4" data-testid="product-name">
         {product.title}
       </h1>
       <div className="my-1">
         <span className="mr-2 text-secondary-700 font-bold font-headings text-2xl" data-testid="price">
-          ${product.price?.value.amount}
+          ${selectedVariant?.price?.amount}
         </span>
-        <span className="text-base font-normal text-neutral-500 line-through">
-          ${product.price?.regularPrice.amount}
-        </span>
+        {selectedVariant?.compareAtPrice ? (
+          <span className="text-base font-normal text-neutral-500 line-through">
+            ${selectedVariant?.compareAtPrice?.amount}
+          </span>
+        ) : null}
       </div>
       <div className="inline-flex items-center mt-4 mb-2">
         <SfRating size="xs" value={product.rating?.average} max={5} />
@@ -63,7 +89,7 @@ export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
       <div className="py-4 mb-4 border-gray-200 border-y">
         <Tag className="w-full mb-4">
           <SfIconShoppingCartCheckout />
-          {t('common:numberInCart', { count: 1 })}
+          {t('common:numberInCart', { count: productsInCart })}
         </Tag>
         <div className="flex flex-col md:flex-row flex-wrap gap-4">
           <QuantitySelector
@@ -78,6 +104,7 @@ export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
             size="lg"
             className="flex-grow-[2] flex-shrink basis-auto whitespace-nowrap"
             slotPrefix={<SfIconShoppingCart size="sm" />}
+            onClick={handleAddToCart}
           >
             {t('common:addToCart')}
           </SfButton>
