@@ -15,9 +15,9 @@ export function useProductBreadcrumbs(product?: SfProduct) {
 
     return [
       { name: t('home'), link: '/' },
-      { name: t('category'), link: '/category' },
-      { name: product.name as string, link: `#` },
-    ];
+      product.productType && { name: product.productType, link: product.productType },
+      { name: product.title as string, link: `#` },
+    ].filter(Boolean);
   }, [product, t]);
 
   return {

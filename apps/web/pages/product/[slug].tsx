@@ -55,7 +55,7 @@ export function ProductPage() {
 
   const { data: product } = useProduct(slug);
   const { data: recommendedProducts = [] } = useProductRecommended(slug);
-  // const { breadcrumbs } = useProductBreadcrumbs(product);
+  const { breadcrumbs } = useProductBreadcrumbs(product);
 
   if (!product) {
     return null;
@@ -64,7 +64,7 @@ export function ProductPage() {
   const images = flattenArray(product.gallery);
 
   return (
-    <DefaultLayout /* breadcrumbs={breadcrumbs} */>
+    <DefaultLayout breadcrumbs={breadcrumbs}>
       <Head>
         <title>{`${product.title} | Vue Storefront Demo`}</title>
       </Head>
@@ -77,13 +77,14 @@ export function ProductPage() {
             <PurchaseCard product={product} />
           </section>
           <section className="grid-in-left-bottom md:mt-8">
-            {/* <Divider className="mb-6" /> */}
             <ProductProperties product={product} showColors={false} />
             <ProductAccordion product={product} />
           </section>
           <Divider className="mt-4 mb-2" />
         </div>
-        <section className="mx-4 mt-28 mb-20">{/* <RecommendedProducts products={recommendedProducts} /> */}</section>
+        <section className="mx-4 mt-28 mb-20">
+          <RecommendedProducts products={recommendedProducts} />
+        </section>
       </NarrowContainer>
     </DefaultLayout>
   );
