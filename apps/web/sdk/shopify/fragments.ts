@@ -43,6 +43,7 @@ const product = `#graphql
     name
     values
   }
+  productType
   priceRange {
     minVariantPrice {
       amount
