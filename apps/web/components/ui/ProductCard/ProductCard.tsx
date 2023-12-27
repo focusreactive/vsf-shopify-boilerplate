@@ -33,15 +33,17 @@ export function ProductCard({
     >
       <div className="relative">
         <SfLink href={`/product/${slug}`} as={Link} className="relative block w-full pb-[100%]">
-          <Image
-            src={imageUrl ?? ''}
-            alt={imageAlt || 'primary image'}
-            className="object-cover rounded-md aspect-square w-full h-full"
-            data-testid="image-slot"
-            fill
-            sizes="(max-width: 768px) 50vw, 190px"
-            priority={priority}
-          />
+          {imageUrl && (
+            <Image
+              src={imageUrl ?? ''}
+              alt={imageAlt || 'primary image'}
+              className="object-cover rounded-md aspect-square w-full h-full"
+              data-testid="image-slot"
+              fill
+              sizes="(max-width: 768px) 50vw, 190px"
+              priority={priority}
+            />
+          )}
         </SfLink>
       </div>
       <div
