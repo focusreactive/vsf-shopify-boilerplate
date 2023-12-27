@@ -1,0 +1,335 @@
+{
+  "metaobjectDefinitions": {
+    "edges": [
+      {
+        "node": {
+          "id": "gid://shopify/MetaobjectDefinition/1650163992",
+          "type": "product_slider",
+          "name": "ProductSlider",
+          "description": null,
+          "fieldDefinitions": [
+            {
+              "name": "title",
+              "key": "title",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": false
+            },
+            {
+              "name": "collection",
+              "key": "collection",
+              "description": "refer a collection to output its products in Slider Component",
+              "type": {
+                "category": "REFERENCE",
+                "name": "collection_reference"
+              },
+              "required": true
+            }
+          ]
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/MetaobjectDefinition/1650196760",
+          "type": "richtext_block",
+          "name": "Richtext block",
+          "description": null,
+          "fieldDefinitions": [
+            {
+              "name": "Title",
+              "key": "title",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": false
+            },
+            {
+              "name": "description",
+              "key": "description",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "rich_text_field"
+              },
+              "required": false
+            }
+          ]
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/MetaobjectDefinition/1650229528",
+          "type": "hero",
+          "name": "Hero",
+          "description": null,
+          "fieldDefinitions": [
+            {
+              "name": "Title",
+              "key": "title",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": true
+            },
+            {
+              "name": "Subtitle",
+              "key": "subtitle",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": false
+            },
+            {
+              "name": "Description",
+              "key": "description",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "rich_text_field"
+              },
+              "required": false
+            },
+            {
+              "name": "Primary Button Link",
+              "key": "primary_button_link",
+              "description": "",
+              "type": {
+                "category": "REFERENCE",
+                "name": "product_reference"
+              },
+              "required": true
+            },
+            {
+              "name": "Primary Button Text",
+              "key": "primary_button_text",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": true
+            },
+            {
+              "name": "Secondary Button Link",
+              "key": "secondary_button_link",
+              "description": "",
+              "type": {
+                "category": "REFERENCE",
+                "name": "collection_reference"
+              },
+              "required": false
+            },
+            {
+              "name": "Secondary Button Text",
+              "key": "secondary_button_text",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": false
+            }
+          ]
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/MetaobjectDefinition/1650327832",
+          "type": "collection_card",
+          "name": "Collection Cards",
+          "description": null,
+          "fieldDefinitions": [
+            {
+              "name": "Title",
+              "key": "title",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": false
+            },
+            {
+              "name": "collection1",
+              "key": "collection_1",
+              "description": "",
+              "type": {
+                "category": "REFERENCE",
+                "name": "collection_reference"
+              },
+              "required": false
+            },
+            {
+              "name": "collection2",
+              "key": "collection_2",
+              "description": "",
+              "type": {
+                "category": "REFERENCE",
+                "name": "collection_reference"
+              },
+              "required": false
+            },
+            {
+              "name": "collection3",
+              "key": "collection_3",
+              "description": "",
+              "type": {
+                "category": "REFERENCE",
+                "name": "collection_reference"
+              },
+              "required": false
+            }
+          ]
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/MetaobjectDefinition/1650360600",
+          "type": "display_card",
+          "name": "Display Card",
+          "description": null,
+          "fieldDefinitions": [
+            {
+              "name": "title",
+              "key": "title",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": false
+            },
+            {
+              "name": "subtitle",
+              "key": "subtitle",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": false
+            },
+            {
+              "name": "Image",
+              "key": "image",
+              "description": "",
+              "type": {
+                "category": "REFERENCE",
+                "name": "file_reference"
+              },
+              "required": false
+            },
+            {
+              "name": "Description",
+              "key": "description",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "rich_text_field"
+              },
+              "required": false
+            },
+            {
+              "name": "page",
+              "key": "page",
+              "description": "",
+              "type": {
+                "category": "REFERENCE",
+                "name": "page_reference"
+              },
+              "required": false
+            },
+            {
+              "name": "CTA Text",
+              "key": "cta_text",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": false
+            },
+            {
+              "name": "Reverse",
+              "key": "reverse",
+              "description": "",
+              "type": {
+                "category": "TRUE_FALSE",
+                "name": "boolean"
+              },
+              "required": false
+            },
+            {
+              "name": "Card Color",
+              "key": "card_color",
+              "description": "",
+              "type": {
+                "category": "COLOR",
+                "name": "color"
+              },
+              "required": false
+            }
+          ]
+        }
+      },
+      {
+        "node": {
+          "id": "gid://shopify/MetaobjectDefinition/1650393368",
+          "type": "display",
+          "name": "Display",
+          "description": null,
+          "fieldDefinitions": [
+            {
+              "name": "title",
+              "key": "title",
+              "description": "",
+              "type": {
+                "category": "TEXT",
+                "name": "single_line_text_field"
+              },
+              "required": false
+            },
+            {
+              "name": "card1",
+              "key": "card_1",
+              "description": "",
+              "type": {
+                "category": "REFERENCE",
+                "name": "metaobject_reference"
+              },
+              "required": false
+            },
+            {
+              "name": "card2",
+              "key": "card_2",
+              "description": "",
+              "type": {
+                "category": "REFERENCE",
+                "name": "metaobject_reference"
+              },
+              "required": false
+            },
+            {
+              "name": "card3",
+              "key": "card_3",
+              "description": "",
+              "type": {
+                "category": "REFERENCE",
+                "name": "metaobject_reference"
+              },
+              "required": false
+            }
+          ]
+        }
+      }
+    ]
+  }
