@@ -54,5 +54,5 @@ export type Product = {
     name: string;
     values: string[];
   }[];
-  variants: EdgeNode<Variant>;
+  variants: Variant[];
 };
