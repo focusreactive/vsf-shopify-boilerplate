@@ -8,7 +8,7 @@ export function NavbarTop({ children, filled, ...attributes }: NavbarTopProps) {
     <header
       className={classNames(
         'h-14 md:h-20 flex z-50 md:sticky md:-top-5 md:pt-2.5 md:shadow-md',
-        filled ? 'bg-primary-700 text-white' : 'bg-white text-[#02C652] border-b border-neutral-200',
+        filled ? 'bg-primary-700 text-white' : 'bg-white text-primary-700 border-b border-neutral-200',
       )}
       data-testid="navbar-top"
       {...attributes}

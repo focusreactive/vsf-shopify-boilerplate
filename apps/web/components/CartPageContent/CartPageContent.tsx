@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SfButton, SfLoaderCircular } from '@storefront-ui/react';
@@ -12,7 +13,12 @@ const Loading = () => (
   </span>
 );
 
-const Empty = ({ message, alt }) => (
+interface EmptyProps {
+  message: string;
+  alt: string;
+}
+
+const Empty = ({ message, alt }: EmptyProps) => (
   <div className="flex items-center justify-center flex-col pt-24 pb-32" data-testid="cart-page-content">
     <Image src={emptyCartImage} alt={alt} />
     <h2 className="mt-8">{message}</h2>
@@ -37,7 +43,11 @@ export function CartPageContent() {
     removeCartItem(lineId);
   };
 
-  const placeHolder = isLoading ? <Loading /> : <Empty message={t('emptyCart')} alt={t('emptyCartImgAlt')} />;
+  const placeHolder: ReactNode = isLoading ? (
+    <Loading />
+  ) : (
+    <Empty message={t('emptyCart')} alt={t('emptyCartImgAlt')} />
+  );
 
   return cart?.lines.length ? (
     <div className="md:grid md:grid-cols-12 md:gap-x-6" data-testid="cart-page-content">
