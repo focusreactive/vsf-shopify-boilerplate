@@ -2,41 +2,11 @@ import React from 'react';
 import { SfScrollable } from '@storefront-ui/react';
 import { ProductCard } from '~/components';
 import type { ProductSliderProps } from '~/components';
-import { sdk } from '~/sdk';
+import { useProducts } from '~/hooks';
 
-const processProducts = (resp) => {
-  try {
-    const productsResponse = resp.data.products.edges;
-    return productsResponse.map(({ node }) => ({
-      ...node,
-      price: node.priceRange?.minVariantPrice?.amount,
-      currencyCode: node.priceRange?.minVariantPrice?.currencyCode,
-    }));
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
+export function ProductSlider({ className, collection, ...attributes }: ProductSliderProps) {
+  const { products } = useProducts(collection);
 
-const useProducts = () => {
-  const [products, setProducts] = React.useState([]);
-
-  const getData = async () => {
-    const resp = await sdk.shopify.getProducts({});
-    setProducts(resp.products);
-  };
-
-  React.useEffect(() => {
-    getData();
-  }, []);
-
-  return { products };
-};
-
-export function ProductSlider({ className, ...attributes }: ProductSliderProps) {
-  const { products } = useProducts();
-
-  // return products.map((d) => <p>{JSON.stringify(d)}</p>);
   return (
     <SfScrollable
       buttonsPlacement="floating"
@@ -44,22 +14,25 @@ export function ProductSlider({ className, ...attributes }: ProductSliderProps) 
       {...attributes}
       wrapperClassName={className}
     >
-      {products.map(({ id, title, description, rating, price, currencyCode, primaryImage, slug }) => (
-        <ProductCard
-          key={id}
-          className="w-[192px]"
-          descriptionClassName="h-[192px]"
-          name={title}
-          description={description}
-          ratingCount={rating?.count}
-          rating={rating?.average}
-          price={price}
-          currencyCode={currencyCode}
-          imageUrl={primaryImage?.url}
-          imageAlt={primaryImage?.altText}
-          slug={slug}
-        />
-      ))}
+      {products.map((product) => {
+        const { id, title, description, priceRange, primaryImage, slug, variants } = product;
+        return (
+          <ProductCard
+            key={id}
+            className="w-[192px]"
+            descriptionClassName="h-[192px]"
+            name={title}
+            description={description}
+            compareAtPrice={variants[0]?.compareAtPrice?.amount}
+            price={priceRange.minVariantPrice.amount}
+            currencyCode={priceRange.minVariantPrice.currencyCode}
+            imageUrl={primaryImage?.url}
+            imageAlt={primaryImage?.altText}
+            slug={slug}
+            product={product}
+          />
+        );
+      })}
     </SfScrollable>
   );
 }

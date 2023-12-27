@@ -4,6 +4,8 @@ import { SfButton, SfRating, SfCounter, SfLink, SfIconShoppingCart } from '@stor
 import classNames from 'classnames';
 import { useTranslation } from 'next-i18next';
 import type { ProductCardProps } from '~/components';
+import { useCartContext } from '~/hooks';
+import useProductRating from '~/hooks/useProductRating/useProductRating';
 
 export function ProductCard({
   name,
@@ -11,23 +13,41 @@ export function ProductCard({
   imageUrl,
   imageAlt,
   price,
+  compareAtPrice,
   currencyCode,
-  rating,
-  ratingCount,
   slug,
   className,
   descriptionClassName,
   priority,
+  product,
   ...attributes
 }: ProductCardProps) {
   const { t } = useTranslation();
+  const { rating, ratingCount } = useProductRating(product);
+  const { addCustomVariantToCart, isLoading } = useCartContext();
+
   // TODO [>0.2] Care about getting right locale for price formatting
   const priceString = price
     ? new Intl.NumberFormat('en-EN', { style: 'currency', currency: currencyCode }).format(price)
     : '';
+  const compareString = compareAtPrice
+    ? new Intl.NumberFormat('en-EN', { style: 'currency', currency: currencyCode }).format(compareAtPrice)
+    : '';
+
+  const handleAddToCart = () => {
+    if (isLoading) {
+      return;
+    }
+    const variantId = product?.variants[0].id;
+    addCustomVariantToCart(1, variantId);
+  };
+
   return (
     <div
-      className={classNames('border border-neutral-200 rounded-md hover:shadow-lg flex-auto flex-shrink-0', className)}
+      className={classNames(
+        'border border-neutral-200 rounded-md hover:shadow-lg flex-auto flex-shrink-0 flex flex-col justify-between',
+        className,
+      )}
       data-testid="product-card"
       {...attributes}
     >
@@ -64,15 +84,31 @@ export function ProductCard({
             </SfLink>
           </div>
         ) : null}
-        <p className="block py-2 font-normal typography-text-xs text-neutral-700 text-justify flex-grow max-h-24 overflow-hidden text-ellipsis">
-          {description}
-        </p>
-        <span className="block pb-2 font-bold typography-text-sm" data-testid="product-card-vertical-price">
-          {priceString}
-        </span>
-        <SfButton type="button" size="sm" slotPrefix={<SfIconShoppingCart size="sm" />}>
-          {t('addToCartShort')}
-        </SfButton>
+        <div className="block py-2 font-normal typography-text-xs text-neutral-700 text-justify flex-grow flex-shrink overflow-hidden">
+          <p>{description}</p>
+        </div>
+        <div>
+          {compareAtPrice ? (
+            <p className="pb-2">
+              <span className="font-bold typography-text-sm" data-testid="product-card-vertical-price">
+                {priceString}
+              </span>
+              <span
+                className="ml-3 font-normal line-through typography-text-sm"
+                data-testid="product-card-vertical-price"
+              >
+                {compareString}
+              </span>
+            </p>
+          ) : (
+            <span className="block pb-2 font-bold typography-text-sm" data-testid="product-card-vertical-price">
+              {priceString}
+            </span>
+          )}
+          <SfButton onClick={handleAddToCart} type="button" size="sm" slotPrefix={<SfIconShoppingCart size="sm" />}>
+            {t('addToCartShort')}
+          </SfButton>
+        </div>
       </div>
     </div>
   );
