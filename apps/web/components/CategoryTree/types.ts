@@ -9,7 +9,7 @@ export type CategoryTreeItem = {
 
 export type CategoryTreeProps = {
   parent?: CategoryTreeItem;
-  categories: CategoryTreeItem[];
+  collections: CategoryTreeItem[];
 };
 
 export type CategoryTreeItemProps = Omit<CategoryTreeItem, 'name'> & {

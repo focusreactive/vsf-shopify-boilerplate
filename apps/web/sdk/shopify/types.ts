@@ -143,3 +143,14 @@ export type PageInfo = {
   endCursor: string;
   hasNextPage: boolean;
 };
+
+export type Collection = {
+  id: string;
+  title: string;
+  description: string;
+  slug: string;
+  image: {
+    url: string;
+    altText: string;
+  };
+};

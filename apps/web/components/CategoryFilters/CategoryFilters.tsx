@@ -1,20 +1,27 @@
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import type { CategoryFiltersProps } from '~/components';
 import { Filter } from './Filter';
+import { CategoryFiltersProps } from './types';
 
-export function CategoryFilters({ facets }: CategoryFiltersProps) {
+export function CategoryFilters({ facets, onFilterApply }: CategoryFiltersProps) {
   const { t } = useTranslation('category');
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const colorFacets = facets.find(({ name }) => name === 'color');
-  const sizeFacets = facets.find(({ name }) => name === 'size');
+  const [selectedFilters, setSelectedFilters] = useState<{ [key: string]: string[] }>({});
 
-  const handleFilterSelection = (currentValue: string) => {
-    if (selectedFilters.includes(currentValue)) {
-      setSelectedFilters(selectedFilters.filter((value) => value !== currentValue));
-    } else {
-      setSelectedFilters([...selectedFilters, currentValue]);
+  const handleFilterSelection = (facetName: string, selectedValue: string) => {
+    const updatedFilters = { ...selectedFilters };
+    if (!updatedFilters[facetName]) {
+      updatedFilters[facetName] = [];
     }
+
+    const currentIndex = updatedFilters[facetName].indexOf(selectedValue);
+    if (currentIndex === -1) {
+      updatedFilters[facetName].push(selectedValue);
+    } else {
+      updatedFilters[facetName].splice(currentIndex, 1);
+    }
+
+    setSelectedFilters(updatedFilters);
+    onFilterApply(updatedFilters);
   };
 
   return (
@@ -26,12 +33,14 @@ export function CategoryFilters({ facets }: CategoryFiltersProps) {
         {t('filters')}
       </span>
       <div className="flex flex-col gap-2">
-        {sizeFacets && (
-          <Filter facet={sizeFacets} onChange={handleFilterSelection} selected={selectedFilters} type="size" />
-        )}
-        {colorFacets && (
-          <Filter facet={colorFacets} onChange={handleFilterSelection} selected={selectedFilters} type="color" />
-        )}
+        {facets.map((facet) => (
+          <Filter
+            key={facet.name}
+            facet={facet}
+            onChange={handleFilterSelection}
+            selected={selectedFilters[facet.name] || []}
+          />
+        ))}
       </div>
     </>
   );

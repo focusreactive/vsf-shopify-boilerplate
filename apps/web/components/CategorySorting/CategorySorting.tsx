@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { sortingOptions } from '~/mocks';
 
 export function CategorySorting() {
-  const { t } = useTranslation('category');
+  const { t } = useTranslation('collection');
 
   return (
     <>

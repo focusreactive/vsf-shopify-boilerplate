@@ -19,7 +19,7 @@ export function CartPage() {
   const { t } = useTranslation('cart');
 
   return (
-    <CheckoutLayout backLabel={t('backToShopping')} backHref="/category" heading={t('myCart')}>
+    <CheckoutLayout backLabel={t('backToShopping')} backHref="/collection" heading={t('myCart')}>
       <CartPageContent />
     </CheckoutLayout>
   );
