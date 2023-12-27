@@ -27,7 +27,7 @@ export async function getServerSideProps({ res, locale }: GetServerSidePropsCont
 
 export default function Checkout() {
   const { t } = useTranslation('checkout');
-  const { data: cart } = useCart();
+  const { cart, totalItems } = useCart();
 
   if (!cart) {
     return null;
@@ -60,7 +60,7 @@ export default function Checkout() {
           <CheckoutPayment activePayment="credit-card" onPaymentChange={() => {}} />
           <Divider className="w-screen md:w-auto -mx-4 md:mx-0 mb-10" />
         </div>
-        <OrderSummary cart={cart} className="col-span-5 md:sticky md:top-20 h-fit">
+        <OrderSummary cart={cart} totalItems={totalItems} className="col-span-5 md:sticky md:top-20 h-fit">
           <>
             <SfButton as={Link} href="/order/success" size="lg" className="w-full mb-4 md:mb-0">
               {t('placeOrder')}

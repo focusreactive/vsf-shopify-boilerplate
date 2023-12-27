@@ -3,9 +3,13 @@ import { useTranslation } from 'next-i18next';
 import { useCart, useCartShippingMethods } from '~/hooks';
 
 export function ShippingMethod() {
-  const { data: cart } = useCart();
+  const { cart } = useCart();
   const { data: shippingMethods } = useCartShippingMethods();
   const { t } = useTranslation('checkout');
+  const shippingMethod = {
+    id: 'your shipping method ID',
+    cart,
+  };
 
   return (
     <div data-testid="shipping-method" className="md:px-4 my-6">
@@ -18,7 +22,7 @@ export function ShippingMethod() {
             {shippingMethods.methods.map(({ id, name, estimatedDelivery, price: { amount } }) => (
               <SfListItem as="label" key={id} className="border rounded-md items-start">
                 <div className="flex gap-2">
-                  <SfRadio onChange={() => {}} checked={cart?.shippingMethod?.id === id} value={id} name={name} />
+                  <SfRadio onChange={() => {}} checked={shippingMethod?.id === id} value={id} name={name} />
                   <div>
                     <p>{name}</p>
                     <p className="text-xs text-neutral-500">{estimatedDelivery}</p>

@@ -13,7 +13,7 @@ import {
   PurchaseCard,
   RecommendedProducts,
 } from '~/components';
-import { useProduct, useProductRecommended, prefetchProduct, useProductBreadcrumbs } from '~/hooks';
+import { useProduct, prefetchProduct, useProductBreadcrumbs } from '~/hooks';
 import { DefaultLayout } from '~/layouts';
 import { flattenArray } from '~/sdk/shopify/fattenArray';
 
@@ -54,7 +54,6 @@ export function ProductPage() {
   const { slug } = router.query as ProductPageQuery;
 
   const { data: product } = useProduct(slug);
-  const { data: recommendedProducts = [] } = useProductRecommended(slug);
   const { breadcrumbs } = useProductBreadcrumbs(product);
 
   if (!product) {
@@ -85,7 +84,7 @@ export function ProductPage() {
               <Divider className="mt-4 mb-2" />
             </div>
             <section className="mx-4 mt-28 mb-20">
-              <RecommendedProducts products={recommendedProducts} />
+              <RecommendedProducts />
             </section>
           </>
         ) : null}

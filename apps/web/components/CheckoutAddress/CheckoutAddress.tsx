@@ -5,7 +5,7 @@ import type { AddressFormFields, CheckoutAddressProps } from '~/components';
 import { useCart } from '~/hooks';
 
 export function CheckoutAddress({ type, heading, description, buttonText }: CheckoutAddressProps): JSX.Element | null {
-  const { data: cart } = useCart();
+  const { cart } = useCart();
 
   const { isOpen, open, close } = useDisclosure({ initialValue: false });
   const { t } = useTranslation('checkout');
@@ -14,13 +14,13 @@ export function CheckoutAddress({ type, heading, description, buttonText }: Chec
     return null;
   }
 
-  const savedAddress = cart[type] as unknown as AddressFormFields;
+  const savedAddress = cart as unknown as AddressFormFields;
 
   return (
     <div data-testid="checkout-address" className="md:px-4 py-6">
       <div className="flex justify-between items-center">
         <h2 className="text-neutral-900 text-lg font-bold mb-4">{heading}</h2>
-        {cart[type] && (
+        {cart && (
           <SfButton onClick={open} size="sm" variant="tertiary">
             {t('contactInfo.edit')}
           </SfButton>

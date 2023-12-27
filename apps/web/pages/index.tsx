@@ -2,7 +2,7 @@ import { Fragment, ReactElement } from 'react';
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { RenderContent } from '~/components';
-import { fetchPage, processContent, ContentComponent } from '~/hooks';
+import { fetchPage, processContent, ContentComponent, BlockComponent } from '~/hooks';
 import { PageData, ContentReferences, Metaobject, ContentResponse } from '~/hooks/useContent/types';
 import { DefaultLayout } from '~/layouts';
 
@@ -53,7 +53,7 @@ const LandingPage = ({ pageData, content }: LandingPageProps): ReactElement => {
         <div className="cms-content">
           {content.map((contentBlock) => (
             <Fragment key={contentBlock.id}>
-              <RenderContent contentBlock={contentBlock} />
+              <RenderContent contentBlock={contentBlock as BlockComponent} />
             </Fragment>
           ))}
         </div>

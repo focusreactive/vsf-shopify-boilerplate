@@ -1,6 +1,6 @@
-import { SfProduct } from '@vue-storefront/unified-data-model';
+import { Product } from '~/sdk/shopify/types';
 
 export type ProductPropertiesProps = {
-  product: SfProduct;
+  product: Product;
   showColors: boolean;
 };

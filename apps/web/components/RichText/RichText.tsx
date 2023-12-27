@@ -1,4 +1,6 @@
 import React from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { convertSchemaToHtml } from '@thebeyondgroup/shopify-rich-text-renderer';
 import withShopify, { ShopifyBlock } from '~/sdk/shopify/withShopify';
 import { Heading } from '../Heading';

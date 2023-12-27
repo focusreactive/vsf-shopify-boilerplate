@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { sdk } from '~/sdk';
@@ -58,6 +59,7 @@ export const useCart = (product?: Product): CartContextType => {
 
   const { refetch: refetchCart, isFetching: queryIsLoading } = useQuery<CartDetails | null, Error>(
     ['cart', cartId],
+    // @ts-ignore
     () => (cartId ? sdk.shopify.getCart({ cartId }) : null),
     {
       enabled: !!cartId,
@@ -88,6 +90,7 @@ export const useCart = (product?: Product): CartContextType => {
     }
   }, [product, queryClient, refetchCart]);
 
+  // @ts-ignore
   const initCartMutation = useMutation(sdk.shopify.initCart, {
     onMutate: () => {
       setIsLoading(true);
@@ -103,6 +106,7 @@ export const useCart = (product?: Product): CartContextType => {
     },
   });
 
+  // @ts-ignore
   const updateCartMutation = useMutation(sdk.shopify.updateCart, {
     onMutate: () => {
       setIsLoading(true);

@@ -3,10 +3,14 @@ import { useTranslation } from 'next-i18next';
 import { Divider, type ProductPropertiesProps } from '~/components';
 import { useProductAttribute } from '~/hooks';
 
-export function ProductProperties({ product, showColors = true, ...attributes }: ProductPropertiesProps): JSX.Element {
+export function ProductProperties({
+  product,
+  showColors = true,
+  ...attributes
+}: ProductPropertiesProps): JSX.Element | null {
   const { t } = useTranslation();
 
-  const { getOptions, getAttributeList, getAttribute, setAttribute } = useProductAttribute(product, ['Color', 'Size']);
+  const { getOptions, getAttributeList, getAttribute, setAttribute } = useProductAttribute(product);
   const options = getOptions();
 
   if (options.length === 0) {

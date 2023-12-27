@@ -10,6 +10,8 @@ export function RenderContent({ contentBlock, ...attributes }: RenderContentProp
   const BlockComponent = getBlockComponent(contentBlock) || UnknownBlock;
   return (
     <div>
+      {/*  eslint-disable-next-line @typescript-eslint/ban-ts-comment  */}
+      {/* @ts-ignore */}
       <BlockComponent {...contentBlock.fields} contentBlock={contentBlock} {...attributes} />
     </div>
   );

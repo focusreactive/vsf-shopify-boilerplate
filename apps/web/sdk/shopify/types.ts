@@ -60,6 +60,7 @@ export type Product = {
   totalInventory: number;
   options: Option[];
   variants: Variant[];
+  productType?: string;
 };
 
 export type Merchandise = {

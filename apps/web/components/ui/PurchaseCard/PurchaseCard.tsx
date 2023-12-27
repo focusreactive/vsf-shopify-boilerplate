@@ -49,6 +49,12 @@ export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
 
   const productsInCart = calcAddedProducts(product.id, cart?.lines);
 
+  const rating = {
+    // Note: implement you rating logic
+    average: 4.5,
+    count: 25,
+  };
+
   return (
     <div
       className="p-4 xl:p-6 md:border md:border-neutral-100 md:shadow-lg md:rounded-md md:sticky md:top-20"
@@ -75,12 +81,12 @@ export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
         ) : null}
       </div>
       <div className="inline-flex items-center mt-4 mb-2">
-        <SfRating size="xs" value={product.rating?.average} max={5} />
+        <SfRating size="xs" value={rating?.average} max={5} />
         <SfCounter className="ml-1" size="xs">
-          {product.rating?.count}
+          {rating?.count}
         </SfCounter>
         <SfLink href="#" variant="secondary" className="ml-2 text-xs text-neutral-500">
-          {t('reviewsCount', { count: product.rating?.count })}
+          {t('reviewsCount', { count: rating?.count })}
         </SfLink>
       </div>
       <p className="mb-4 font-normal typography-text-sm" data-testid="product-description">

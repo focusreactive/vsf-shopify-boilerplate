@@ -45,8 +45,7 @@ export function BottomNav({ ...attributes }) {
   const router = useRouter();
   const { t } = useTranslation();
   const { isOpen, open, close } = useDisclosure({ initialValue: false });
-  const { data: cart } = useCart();
-  const cartLineItemsCount = cart?.lineItems.reduce((total, { quantity }) => total + quantity, 0) ?? 0;
+  const { totalItems } = useCart();
 
   const onClickHandler = (path: string) => {
     if (path === '/search') {
@@ -63,7 +62,7 @@ export function BottomNav({ ...attributes }) {
         data-testid="navbar-bottom"
         {...attributes}
       >
-        {getItems(cartLineItemsCount).map(({ label, icon, path }) => (
+        {getItems(totalItems.lines).map(({ label, icon, path }) => (
           <SfButton
             key={label}
             variant="tertiary"
@@ -75,7 +74,7 @@ export function BottomNav({ ...attributes }) {
             )}
             onClick={() => onClickHandler(path)}
             {...(label === 'cart' && {
-              'aria-label': t('numberInCart', { count: cartLineItemsCount }),
+              'aria-label': t('numberInCart', { count: totalItems.lines }),
             })}
           >
             {t(label)}

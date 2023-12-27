@@ -16,7 +16,7 @@ export function Search({ className }: SearchProps) {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     close();
-    await router.push(`/search?search=${searchValue}`);
+    await router.push(`/collection?search=${searchValue}`);
   };
   const handleReset = () => {
     setSearchValue('');
