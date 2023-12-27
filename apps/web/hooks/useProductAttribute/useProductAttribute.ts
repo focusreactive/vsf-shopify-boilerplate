@@ -7,31 +7,33 @@ import { get, map, defaults as withDefaults, zipObject, groupBy, uniqBy, pick, m
  * @param {SfProduct} product Product object
  */
 export function useProductAttribute<TAttribute extends string>(product: SfProduct, attributesNames: TAttribute[] = []) {
-  console.log('🚀 ~ file: useProductAttribute.ts:10 ~ product:', product?.variants || []);
-  const attributes = groupBy(
-    uniqBy(
-      (product?.variants || []).flatMap((variant) => variant?.attributes),
-      'value',
-    ),
-    'name',
-  );
-  const mapAttribute = (attributes: SfAttribute[] = []) => {
-    const mappedAttributes = mapValues(
-      pick(groupBy(attributes, 'name'), attributesNames),
-      (attribute) => attribute[0].value,
-    );
+  // const attributes = groupBy(
+  //   uniqBy(
+  //     (product?.variants || []).flatMap((variant) => variant?.attributes),
+  //     'value',
+  //   ),
+  //   'name',
+  // );
+  // const mapAttribute = (attributes: SfAttribute[] = []) => {
+  //   const mappedAttributes = mapValues(
+  //     pick(groupBy(attributes, 'name'), attributesNames),
+  //     (attribute) => attribute[0].value,
+  //   );
 
-    const defaults = zipObject(
-      attributesNames,
-      map(attributesNames, () => null),
-    );
-    return withDefaults(mappedAttributes, defaults);
-  };
+  //   const defaults = zipObject(
+  //     attributesNames,
+  //     map(attributesNames, () => null),
+  //   );
+  //   return withDefaults(mappedAttributes, defaults);
+  // };
+  const defaultAttributes = Object.entries(product.attributes)
+    .map(([name, values]) => ({ [name]: values[0].value }))
+    .reduce((obj, attr) => ({ ...obj, ...attr }), {});
 
-  const [selectedAttrs, setSelectedAttrs] = useState(mapAttribute(product.attributes));
+  const [selectedAttrs, setSelectedAttrs] = useState(defaultAttributes);
 
   return {
-    getAttributeList: (attributeName: TAttribute) => get(attributes, attributeName, [] as SfAttribute[]),
+    getAttributeList: (attributeName: TAttribute) => get(product.attributes, attributeName, [] as SfAttribute[]),
     getAttribute: (attributeName: TAttribute) => get(selectedAttrs, attributeName, null),
     setAttribute: (attributeName: TAttribute, attributeValue: string) => {
       setSelectedAttrs((previous) => ({

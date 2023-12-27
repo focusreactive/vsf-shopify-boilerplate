@@ -11,7 +11,6 @@ const processProducts = (resp) => {
       ...node,
       price: node.priceRange?.minVariantPrice?.amount,
       currencyCode: node.priceRange?.minVariantPrice?.currencyCode,
-      slug: node.handle,
     }));
   } catch (error) {
     console.error(error);

@@ -38,7 +38,7 @@ export function PurchaseCard({ product, ...attributes }: PurchaseCardProps) {
         <span className="mr-1">{t('sale')}</span>
       </Tag>
       <h1 className="mb-1 font-bold typography-headline-4" data-testid="product-name">
-        {product.name}
+        {product.title}
       </h1>
       <div className="my-1">
         <span className="mr-2 text-secondary-700 font-bold font-headings text-2xl" data-testid="price">

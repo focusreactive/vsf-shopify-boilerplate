@@ -3,15 +3,15 @@ import { useTranslation } from 'next-i18next';
 import type { ProductPropertiesProps } from '~/components';
 import { useProductAttribute } from '~/hooks';
 
-export function ProductProperties({ product, ...attributes }: ProductPropertiesProps): JSX.Element {
+export function ProductProperties({ product, showColors = true, ...attributes }: ProductPropertiesProps): JSX.Element {
   const { t } = useTranslation();
 
-  const { getAttributeList, getAttribute, setAttribute } = useProductAttribute(product, ['color', 'size']);
+  const { getAttributeList, getAttribute, setAttribute } = useProductAttribute(product, ['Color', 'Size']);
 
-  const sizes = getAttributeList('size');
-  const colors = getAttributeList('color');
-  const selectedSize = getAttribute('size');
-  const selectedColor = getAttribute('color');
+  const sizes = getAttributeList('Size');
+  const colors = getAttributeList('Color');
+  const selectedSize = getAttribute('Size');
+  const selectedColor = getAttribute('Color');
 
   return (
     <div className="px-4" {...attributes}>
@@ -25,7 +25,7 @@ export function ProductProperties({ product, ...attributes }: ProductPropertiesP
                 size="sm"
                 inputProps={{
                   checked: value === selectedSize,
-                  onChange: () => setAttribute('size', value),
+                  onChange: () => setAttribute('Size', value),
                 }}
               >
                 {label}
@@ -40,11 +40,11 @@ export function ProductProperties({ product, ...attributes }: ProductPropertiesP
           {colors.map(({ value, label }) => (
             <div key={value} className="mr-2 mb-2 inline-block">
               <SfChip
-                slotPrefix={<SfThumbnail size="sm" style={{ background: value }} />}
+                slotPrefix={showColors ? <SfThumbnail size="sm" style={{ background: value }} /> : null}
                 size="sm"
                 inputProps={{
                   checked: value === selectedColor,
-                  onChange: () => setAttribute('color', value),
+                  onChange: () => setAttribute('Color', value),
                 }}
               >
                 {label}
