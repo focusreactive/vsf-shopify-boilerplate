@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { SfButton } from '@storefront-ui/react';
 import type { HeroProps } from '~/components';
-import withShopify from '~/sdk/shopify/withShopify';
+import withShopify, { ShopifyBlock } from '~/sdk/shopify/withShopify';
 
 export function Hero({
   image,
@@ -50,4 +50,69 @@ export function Hero({
   );
 }
 
-export const HeroBlock = withShopify({ wrapperFn: (v) => v, isDebug: true })(Hero);
+type RichTextContent = {
+  type: string;
+  children: Array<{
+    type: string;
+    children: Array<{
+      type: string;
+      value: string;
+    }>;
+  }>;
+};
+
+type LinkItem = {
+  __typename: 'Product' | 'Collection';
+  id: string;
+  title: string;
+  slug: string;
+  image?: {
+    url: string;
+  };
+};
+
+type HeroContentFields = {
+  description: string;
+  primary_button_link: LinkItem;
+  primary_button_text: string;
+  secondary_button_link: LinkItem;
+  secondary_button_text: string;
+  subtitle: string;
+  title: string;
+};
+
+const wrapper = (contentBlock: ShopifyBlock<HeroContentFields>): HeroProps => {
+  // Parsing the description as it's a JSON string for rich text content
+  let descriptionText = '';
+  try {
+    const parsedDescription: RichTextContent = JSON.parse(contentBlock.fields.description);
+    // Extract text content from rich text
+    descriptionText = parsedDescription.children
+      .map((paragraph: any) => paragraph.children.map((text: any) => text.value).join(''))
+      .join(' ');
+  } catch (error) {
+    console.error('Error parsing description:', error);
+  }
+
+  // Constructing the URL for primary and secondary buttons
+  // Adjust the URL construction based on your application's routing logic
+  const primaryButtonLink = `/${contentBlock.fields.primary_button_link.__typename.toLowerCase()}/${
+    contentBlock.fields.primary_button_link.slug
+  }`;
+  const secondaryButtonLink = `/${contentBlock.fields.secondary_button_link.__typename.toLowerCase()}/${
+    contentBlock.fields.secondary_button_link.slug
+  }`;
+
+  return {
+    image: contentBlock.fields.secondary_button_link.image?.url || '',
+    subtitle: contentBlock.fields.subtitle,
+    title: contentBlock.fields.title,
+    description: descriptionText,
+    primaryButtonLink,
+    primaryButtonText: contentBlock.fields.primary_button_text,
+    secondaryButtonLink,
+    secondaryButtonText: contentBlock.fields.secondary_button_text,
+  };
+};
+
+export const HeroBlock = withShopify({ wrapperFn: wrapper, isDebug: false })(Hero);

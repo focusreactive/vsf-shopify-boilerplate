@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SfLink, SfIconSell, SfLoaderCircular, SfButton, SfIconDelete } from '@storefront-ui/react';
@@ -23,9 +24,9 @@ export function CartProductCard({
 }: CartProductCardProps) {
   const { t } = useTranslation('product');
 
-  const onChange = (q: number) => {
+  const onChange = useCallback((q: number) => {
     onChangeQuantity(q);
-  };
+  }, []);
 
   return (
     <div
